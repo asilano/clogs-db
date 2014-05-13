@@ -1,4 +1,8 @@
 class MembersController < ApplicationController
+
+  # Can't do anything unless signed in
+  before_filter :authenticate_user!
+
   # GET /members
   # GET /members.json
   def index

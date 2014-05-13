@@ -1,6 +1,9 @@
 ClogsDb::Application.routes.draw do
+  devise_for :users
+
   resources :members
 
+  root to: 'members#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

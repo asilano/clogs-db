@@ -1,0 +1,24 @@
+!!! html5
+%html.no-js
+  %head
+    %title Clogs Membership Database
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    :javascript
+      document.documentElement.className = "js";
+      $(function(){$('.nojs-section').remove()});
+    = csrf_meta_tags
+
+  %body
+    %header
+      %nav
+        - if user_signed_in?
+          = raw("Signed in as #{current_user.email} | " + link_to('Sign out', destroy_user_session_path, method: :delete))
+        - else
+          = link_to 'Sign in', new_user_session_path
+
+    #flash
+      = render partial: 'shared/flash', object: flash
+
+    #content
+      = yield
