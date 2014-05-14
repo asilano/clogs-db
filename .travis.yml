@@ -1,0 +1,12 @@
+language: ruby
+rvm:
+  - 1.9.3
+env:
+  - DEVISE_SECRET=c0ffee
+before_install:
+  - rm Gemfile.lock
+script:
+  - RAILS_ENV=test xvfb-run --server-args="-screen 0 1024x768x24" bundle exec rake db:migrate spec
+before_script:
+  - cp config/database.travis.yml config/database.yml
+  - psql -c 'create database clogs_db_test' -U postgres
