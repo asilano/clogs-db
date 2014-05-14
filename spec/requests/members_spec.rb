@@ -1,11 +1,15 @@
 require 'spec_helper'
 
 describe "Members" do
-  describe "GET /members" do
-    it "works! (now write some real specs)" do
-      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
-      get members_path
-      response.status.should be(200)
+  describe "while logged in" do
+    let(:user) { FactoryGirl.create(:user) }
+    before(:each) { post_via_redirect user_session_path, 'user[email]' => user.email, 'user[password]' => user.password }
+
+    describe "GET /members" do
+      it "works! (now write some real specs)" do
+        get members_path
+        expect(response.status).to be(200)
+      end
     end
   end
 end
