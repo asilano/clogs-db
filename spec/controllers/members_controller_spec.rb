@@ -25,11 +25,109 @@ describe MembersController do
   # adjust the attributes here as well.
   let(:valid_attributes) { }
 
-  let(:user) { FactoryGirl.create(:user) }
+
+  describe "while logged out" do
+    describe "GET index" do
+      it "redirects to login" do
+        member = Member.create! valid_attributes
+        get :index, {}
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    describe "GET show" do
+      it "redirects to login" do
+        member = Member.create! valid_attributes
+        get :show, {:id => member.to_param}
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    describe "GET new" do
+      it "redirects to login" do
+        get :new, {}
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    describe "GET edit" do
+      it "redirects to login" do
+        member = Member.create! valid_attributes
+        get :edit, {:id => member.to_param}
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    describe "POST create" do
+      describe "with valid params" do
+        it "does not create a new Member" do
+          expect {
+            post :create, {:member => valid_attributes}
+          }.to_not change(Member, :count)
+        end
+
+        it "redirects to login" do
+          post :create, {:member => valid_attributes}
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+
+      describe "with invalid params" do
+        it "redirects to login" do
+          # Trigger the behavior that occurs when invalid params are submitted
+          allow_any_instance_of(Member).to receive(:save).and_return(false)
+          post :create, {:member => { "forename" => "invalid value" }}
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+    end
+
+    describe "PUT update" do
+      describe "with valid params" do
+        it "does not update the requested member" do
+          member = Member.create! valid_attributes
+          expect_any_instance_of(Member).to_not receive(:update_attributes).with({ "forename" => "MyString" })
+          put :update, {:id => member.to_param, :member => { "forename" => "MyString" }}
+        end
+
+        it "redirects to login" do
+          member = Member.create! valid_attributes
+          put :update, {:id => member.to_param, :member => valid_attributes}
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+
+      describe "with invalid params" do
+        it "redirects to login" do
+          member = Member.create! valid_attributes
+          # Trigger the behavior that occurs when invalid params are submitted
+          allow_any_instance_of(Member).to receive(:save).and_return(false)
+          put :update, {:id => member.to_param, :member => { "forename" => "invalid value" }}
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+    end
+
+    describe "DELETE destroy" do
+      it "does not destroy the requested member" do
+        member = Member.create! valid_attributes
+        expect {
+          delete :destroy, {:id => member.to_param}
+        }.to_not change(Member, :count)
+      end
+
+      it "redirects to login" do
+        member = Member.create! valid_attributes
+        delete :destroy, {:id => member.to_param}
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
 
   describe "while logged in" do
+    let(:user) { FactoryGirl.create(:user) }
+
     before(:each) do
-      #@request.env["devise.mapping"] = Devise.mappings[:user]
       sign_in user
     end
 

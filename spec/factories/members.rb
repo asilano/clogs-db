@@ -19,4 +19,12 @@ FactoryGirl.define do
     show_fee_paid false
     concert_fee_paid true
   end
+
+  factory :members_wife, parent: :member do
+    forename 'Jane'
+    mobile ''
+    voice 'Soprano'
+    membership 'Non-Performing'
+    concert_fee_paid false
+  end
 end
