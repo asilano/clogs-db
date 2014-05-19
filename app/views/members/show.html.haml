@@ -1,51 +1,52 @@
-%p
-  %b Forename:
-  = @member.forename
-%p
-  %b Surname:
-  = @member.surname
-%p
-  %b Addr1:
-  = @member.addr1
-%p
-  %b Addr2:
-  = @member.addr2
-%p
-  %b Addr3:
-  = @member.addr3
-%p
-  %b Town:
-  = @member.town
-%p
-  %b County:
-  = @member.county
-%p
-  %b Postcode:
-  = @member.postcode
-%p
-  %b Phone:
-  = @member.phone
-%p
-  %b Mobile:
-  = @member.mobile
-%p
-  %b Voice:
-  = @member.voice
-%p
-  %b Membership:
-  = @member.membership
-%p
-  %b Email:
-  = @member.email
-%p
-  %b Subs paid:
-  = @member.subs_paid
-%p
-  %b Show fee paid:
-  = @member.show_fee_paid
-%p
-  %b Concert fee paid:
-  = @member.concert_fee_paid
+%table
+  %tr
+    %th Forename:
+    %td= @member.forename
+  %tr
+    %th Surname:
+    %td= @member.surname
+  %tr
+    %th Addr1:
+    %td= @member.addr1
+  %tr
+    %th Addr2:
+    %td= @member.addr2
+  %tr
+    %th Addr3:
+    %td= @member.addr3
+  %tr
+    %th Town:
+    %td= @member.town
+  %tr
+    %th County:
+    %td= @member.county
+  %tr
+    %th Postcode:
+    %td= @member.postcode
+  %tr
+    %th Phone:
+    %td= @member.phone
+  %tr
+    %th Mobile:
+    %td= @member.mobile
+  %tr
+    %th Voice:
+    %td= @member.voice
+  %tr
+    %th Membership:
+    %td= @member.membership
+  %tr
+    %th Email:
+    %td= @member.email
+  %tr
+    %th Subs paid:
+    %td= @member.subs_paid
+  %tr
+    %th Show fee paid:
+    %td= @member.show_fee_paid
+  %tr
+    %th Concert fee paid:
+    %td= @member.concert_fee_paid
 
 = link_to 'Edit', edit_member_path(@member)
 \|

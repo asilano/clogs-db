@@ -14,10 +14,9 @@
 
     %header
       - if user_signed_in?
-        %p= raw("Signed in as #{current_user.email} | " + link_to('Sign out', destroy_user_session_path, method: :delete))
+        = raw("Signed in as #{current_user.email} | " + link_to('Sign out', destroy_user_session_path, method: :delete))
 
     #flash
       = render partial: 'shared/flash', object: flash
 
-    #content
-      = yield
+    = yield

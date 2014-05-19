@@ -10,30 +10,64 @@
  *
  *= require_self
  */
- @import "compass/reset";
- @import "compass/css3/box-sizing";
- @import "sassybuttons";
- @import "mixins";
+@import "compass/reset";
+@import "compass/css3/box-sizing";
+@import "sassybuttons";
+@import "mixins";
+@import "tablekit";
 
- * {
-   @include box-sizing(border-box);
- }
+* {
+  @include box-sizing(border-box);
+}
 
- html {
-   line-height: 1.2;
-   height: 100%;
- }
+html {
+  line-height: 1.2;
+  height: 100%;
+}
 
- body {
+body {
   height: 100%;
   font-size: 16px;
-  padding: 0.5em 2em 0;
   font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
-  background: linear-gradient(to bottom, $background-light-grey, $background-dark-grey);
- }
+}
 
-#content {
+#gradient-bg {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, $background-light-grey, $background-dark-grey);
+}
+
+header p {
+  position: relative;
+  top: 0;
+  left: 100%;
+  width: 400px;
+  margin-left: -400px;
+  padding: 0.5em 2em;
+  border-radius: 0 0 0 5px;
   background-color: $background-near-white;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+#content, #flash p {
+  margin: 1em;
+  padding: 0.5em 2em;
+  border-radius:5px;
+  background-color: $background-near-white;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+#flash {
+  .notice {
+   border: 2px solid $notice-colour;
+  }
+  .alert {
+    border: 2px solid $alert-colour;
+  }
 }
 
 #sign-in {
@@ -51,7 +85,6 @@
   box-shadow: 10px 10px rgba(0, 0, 0, 0.5);
 
   h1 {
-    font-size: 1.5em;
     text-align: center;
   }
 
@@ -59,25 +92,59 @@
     margin-bottom: 10px;
     text-decoration: underline;
   }
+}
 
-  fieldset {
-    border: 1px solid DarkGray;
-    border-radius: 5px;
-    padding: 10px;
-    padding-top: 0;
-    margin: 5px 0;
+// Switch between javascript and noscript
+.js .nojs-section, .no-js .js-section {
+  display: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Cambria, Georgia, serif;
+}
+
+button, input[type=button], input[type=submit], a.button {
+  @include sassy-button;
+}
+
+fieldset {
+  border: 1px solid DarkGray;
+  border-radius: 5px;
+  padding: 10px;
+  padding-top: 0;
+  margin: 5px 0;
+
+  div {
+    margin: 10px 0;
+    label {
+      float: left;
+      width: 10em;
+    }
+  }
+
+  .field_with_errors {
+    display: inline;
+
+    label {
+      color: $error-colour;
+      &:before {
+        content: '! ';
+        font-weight: bold;
+      }
+    }
+    input, select { background-color: $error-bg-colour; }
   }
 }
 
- // Switch between javascript and noscript
- .js .nojs-section, .no-js .js-section {
-   display: none;
- }
+td, th {
+  border: 1px solid black;
+  padding: 1px 5px;
+}
 
- h1, h2, h3, h4, h5, h6 {
-   font-family: Cambria, Georgia, serif;
- }
+thead {
+  background-color: #ccf;
+}
 
- button, input[type=button], input[type=submit], a.button {
-   @include sassy-button;
- }
+h1 {
+  font-size: 1.5em;
+}

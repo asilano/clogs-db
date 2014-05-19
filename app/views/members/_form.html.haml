@@ -6,53 +6,55 @@
         - @member.errors.full_messages.each do |msg|
           %li= msg
 
-  .field
-    = f.label :forename
-    = f.text_field :forename
-  .field
-    = f.label :surname
-    = f.text_field :surname
-  .field
-    = f.label :addr1
-    = f.text_field :addr1
-  .field
-    = f.label :addr2
-    = f.text_field :addr2
-  .field
-    = f.label :addr3
-    = f.text_field :addr3
-  .field
-    = f.label :town
-    = f.text_field :town
-  .field
-    = f.label :county
-    = f.text_field :county
-  .field
-    = f.label :postcode
-    = f.text_field :postcode
-  .field
-    = f.label :phone
-    = f.text_field :phone
-  .field
-    = f.label :mobile
-    = f.text_field :mobile
-  .field
-    = f.label :voice
-    = f.text_field :voice
-  .field
-    = f.label :membership
-    = f.text_field :membership
-  .field
-    = f.label :email
-    = f.text_field :email
-  .field
-    = f.label :subs_paid
-    = f.check_box :subs_paid
-  .field
-    = f.label :show_fee_paid
-    = f.check_box :show_fee_paid
-  .field
-    = f.label :concert_fee_paid
-    = f.check_box :concert_fee_paid
+  %fieldset
+    %legend= action + " member"
+    .field
+      = f.label :forename
+      = f.text_field :forename
+    .field
+      = f.label :surname
+      = f.text_field :surname
+    .field
+      = f.label :addr1
+      = f.text_field :addr1
+    .field
+      = f.label :addr2
+      = f.text_field :addr2
+    .field
+      = f.label :addr3
+      = f.text_field :addr3
+    .field
+      = f.label :town
+      = f.text_field :town
+    .field
+      = f.label :county
+      = f.text_field :county
+    .field
+      = f.label :postcode
+      = f.text_field :postcode
+    .field
+      = f.label :phone
+      = f.text_field :phone
+    .field
+      = f.label :mobile
+      = f.text_field :mobile
+    .field
+      = f.label :voice
+      = f.text_field :voice
+    .field
+      = f.label :membership
+      = f.text_field :membership
+    .field
+      = f.label :email
+      = f.text_field :email
+    .field
+      = f.label :subs_paid
+      = f.check_box :subs_paid
+    .field
+      = f.label :show_fee_paid
+      = f.check_box :show_fee_paid
+    .field
+      = f.label :concert_fee_paid
+      = f.check_box :concert_fee_paid
   .actions
     = f.submit 'Save'

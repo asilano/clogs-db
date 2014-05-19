@@ -1,6 +1,4 @@
-%h1 Editing member
-
-= render 'form'
+= render partial: 'form', locals: {:action => 'Editing'}
 
 = link_to 'Show', @member
 \|
