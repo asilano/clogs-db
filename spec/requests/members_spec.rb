@@ -84,7 +84,7 @@ describe "Members" do
         # A selection of headings
         expect(page).to have_css('th', text: "Forename")
         expect(page).to have_css('th', text: "Voice")
-        expect(page).to have_css('th', text: "Concert fee paid")
+        expect(page).to have_css('th', text: "Concert paid")
 
         # A selection of fields for the first member
         expect(page).to have_css('td', text: @member.surname)
@@ -100,7 +100,6 @@ describe "Members" do
 
     describe "GET show" do
       it "displays the requested member" do
-        pending "restyle as table"
         visit member_path(@member.id)
 
         # A selection of headings
@@ -127,7 +126,7 @@ describe "Members" do
       it "creates the member with valid params" do
         max_id = Member.select(:id).order('id desc').first[:id]
         visit members_path
-        click_link 'New Member'
+        page.first('a', text: 'New Member').click
 
         fill_in 'Forename', with: 'Bob'
         fill_in 'Surname', with: 'Roberts'
