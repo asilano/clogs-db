@@ -23,8 +23,6 @@
       %th.sortcol Show paid
       %th.sortcol Concert paid
       %th.nosort
-      %th.nosort
-      %th.nosort
 
   %tbody
     - @members.each do |member|
@@ -42,12 +40,10 @@
         %td= member.voice
         %td= member.membership
         %td= member.email
-        %td= member.subs_paid
-        %td= member.show_fee_paid
-        %td= member.concert_fee_paid
-        %td= link_to 'Show', member
-        %td= link_to 'Edit', edit_member_path(member)
-        %td= link_to 'Destroy', member, :method => :delete, :data => { :confirm => 'Are you sure?' }
+        %td= tick_or_cross member.subs_paid
+        %td= tick_or_cross member.show_fee_paid
+        %td= tick_or_cross member.concert_fee_paid
+        %td= show_edit_delete_links(member)
 
 %br
 

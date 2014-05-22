@@ -2,8 +2,12 @@ $background-light-grey: #ddd;
 $background-dark-grey: #888;
 $background-near-white: #fafafa;
 $error-colour: #b50000;
+$ok-colour: #00b500;
 
 $error-bg-colour: lighten($error-colour, 50%);
 $error-colour: #b50000;
 $notice-colour: #005dff;
 $alert-colour: #eac300;
+
+$icon-grey: #888;
+$icon-black: #444;

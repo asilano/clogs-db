@@ -40,13 +40,13 @@
     %td= @member.email
   %tr
     %th Subs paid:
-    %td= @member.subs_paid
+    %td= tick_or_cross @member.subs_paid
   %tr
     %th Show fee paid:
-    %td= @member.show_fee_paid
+    %td= tick_or_cross @member.show_fee_paid
   %tr
     %th Concert fee paid:
-    %td= @member.concert_fee_paid
+    %td= tick_or_cross @member.concert_fee_paid
 
 = link_to 'Edit', edit_member_path(@member)
 \|

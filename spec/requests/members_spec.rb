@@ -111,6 +111,8 @@ describe "Members" do
         expect(page).to have_css('td', text: @member.forename)
         expect(page).to have_css('td', text: @member.email)
         expect(page).to have_css('td', text: @member.addr1)
+        icon = @member.concert_fee_paid ? 'checkmark' : 'cross'
+        expect(page).to have_css("td span.icon-#{icon}")
         expect(page).to_not have_css('td', text: @wife.forename)
 
         visit member_path(@wife.id)
@@ -166,7 +168,7 @@ describe "Members" do
         visit members_path
         old_forename = @member.forename
         expect {
-          page.first('a', text: 'Destroy').click
+          page.first('a span.icon-remove').find(:xpath, '..').click
         }.to change(Member, :count).by(-1)
 
         expect(Member.where{ forename == old_forename }.first).to be_nil

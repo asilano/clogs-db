@@ -1,0 +1,41 @@
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'icomoon';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-pencil:before {
+  content: "\e600";
+}
+.icon-remove:before {
+  content: "\e601";
+}
+.icon-eye:before {
+  content: "\e602";
+}
+.icon-cross:before {
+  content: "\e603";
+  color: $error-colour;
+}
+.icon-checkmark:before {
+  content: "\e604";
+  color: $ok-colour;
+}
+
+a.only-icon {
+  padding: 0 1px;
+  text-decoration: none;
+  color: $icon-grey;
+
+  &:hover {
+    color: $icon-black;
+  }
+}
