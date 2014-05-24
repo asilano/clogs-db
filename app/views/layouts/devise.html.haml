@@ -19,4 +19,8 @@
     #flash
       = render partial: 'shared/flash', object: flash
 
-    = yield
+    - if controller_name == 'sessions'
+      = yield
+    - else
+      #content
+        = yield
