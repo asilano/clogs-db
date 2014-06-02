@@ -63,6 +63,19 @@ describe "Members" do
     end
   end
 
+  describe "while unauthorised" do
+    let(:user) { FactoryGirl.create(:user, approved: false) }
+
+    it "attempts to log in" do
+      visit new_user_session_path
+      fill_in 'Email', with: user.email
+      fill_in 'Password', with: user.password
+      click_button 'Sign in'
+
+      expect(page).to have_content "Your account has not been approved by your administrator yet."
+    end
+  end
+
   describe "while logged in" do
     let(:user) { FactoryGirl.create(:user) }
     before(:each) do

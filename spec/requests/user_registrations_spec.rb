@@ -15,7 +15,7 @@ describe "UserRegistrations" do
     fill_in 'Password confirmation', with: user.password
     click_button 'Sign up'
 
-    expect(page).to have_content 'Your account has been added, but needs to be authorised. The DB Admin will contact you when it has been.'
+    expect(page).to have_content 'Your account has been added, but needs to be authorised. The administrator will contact you when it has been.'
   end
 
 if false

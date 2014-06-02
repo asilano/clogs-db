@@ -12,6 +12,7 @@ en:
       invalid: "Invalid email or password."
       locked: "Your account is locked."
       last_attempt: "You have one more attempt before your account will be locked."
+      not_approved: 'Your account has not been approved by your administrator yet.'
       not_found_in_database: "Invalid email or password."
       timeout: "Your session expired. Please sign in again to continue."
       unauthenticated: "You need to sign in or sign up before continuing."
@@ -33,6 +34,8 @@ en:
       updated: "Your password was changed successfully. You are now signed in."
       updated_not_active: "Your password was changed successfully."
     registrations:
+      user:
+        signed_up_but_not_approved: 'Your account has been added, but needs to be authorised. The administrator will contact you when it has been.'
       destroyed: "Bye! Your account was successfully cancelled. We hope to see you again soon."
       signed_up: "Welcome! You have signed up successfully."
       signed_up_but_inactive: "You have signed up successfully. However, we could not sign you in because your account is not yet activated."
