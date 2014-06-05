@@ -220,3 +220,85 @@ if false
 
 end
 end
+
+describe "approvals" do
+  let!(:admin) { FactoryGirl.create(:user) }
+  let!(:chair) { FactoryGirl.create(:user, approved: false) }
+  let!(:assistant) { FactoryGirl.create(:user) }
+  let!(:evil) { FactoryGirl.create(:user, approved: false) }
+
+  before(:each) do
+    visit new_user_session_path
+    fill_in 'Email', with: admin.email
+    fill_in 'Password', with: admin.password
+    click_button 'Sign in'
+  end
+
+  it "prevents unapproved users seeing users" do
+    click_link 'Sign out'
+    visit new_user_session_path
+    fill_in 'Email', with: chair.email
+    fill_in 'Password', with: chair.password
+    click_button 'Sign in'
+
+    visit users_path
+    expect(page).to have_content("You need to sign in")
+    expect(current_url).to eql new_user_session_url
+  end
+
+  it "allows approved users to see all users" do
+    visit users_path
+    [admin, chair, assistant, evil].each do |user|
+      expect(page).to have_content(user.email)
+    end
+  end
+
+  it "allows approved users to see unapproved users" do
+    visit users_path(approval: '1')
+    [chair, evil].each do |user|
+      expect(page).to have_css('td', text: user.email)
+    end
+    [admin, assistant].each do |user|
+      expect(page).not_to have_content('td', text: user.email)
+    end
+  end
+
+  it "allows approved users to approve other users" do
+    visit users_path(approval: '1')
+    expect { page.find('tr', text: chair.email).first('a span.icon-cross').first(:xpath, './/..').click }.to change{ page.all('a span.icon-cross').count }.from(2).to(1)
+    expect(page).to have_css('#flash .notice', text: "Approved user: #{chair.email}")
+
+    click_link 'Sign out'
+    visit new_user_session_path
+    fill_in 'Email', with: chair.email
+    fill_in 'Password', with: chair.password
+    click_button 'Sign in'
+    visit users_path
+    expect(page).not_to have_content("You need to sign in")
+    expect(current_url).to eql users_url
+  end
+
+  it "allows approved users to unapprove other users" do
+    visit users_path
+
+    expect do
+      assist_row = page.find('tr', text: assistant.email)
+      assist_tick = assist_row.first('a span.icon-checkmark')
+      assist_tick.first(:xpath, './/..').click
+    end.to change { %w<checkmark cross>.map { |sym| page.all("a span.icon-#{sym}").count } }.from([2,2]).to([1,3])
+
+    expect(page).to have_css('#flash .notice', text: "Unapproved user: #{assistant.email}")
+  end
+
+  describe "using javascript", js: true do
+    it "allows approved users to approve other users" do
+      visit users_path(approval: '1')
+      expect(page.all('a span.icon-cross').count).to eq 2
+
+      page.find('tr', text: chair.email).first('a span.icon-cross').first(:xpath, './/..').click
+      wait_for_ajax
+      expect(page).to have_css('#flash .notice', text: "Approved user: #{chair.email}")
+      expect(page.all('a span.icon-cross').count).to eq 1
+    end
+  end
+end

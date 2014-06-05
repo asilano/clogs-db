@@ -1,0 +1,16 @@
+%h1= @approval ? "Unapproved users" : "All members"
+%br
+
+%table.tablekit.sortable
+  %thead
+    %tr
+      %th.sortcol.sortasc Email
+      %th.sortcol Approved
+      %th.nosort
+
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td= user.email
+        %td= link_to tick_or_cross(user.approved), toggle_user_path(user), method: :put, :class => 'only-icon', remote: true
+        %td= link_to(content_tag(:span, '', :class => 'icon-remove', 'aria-hidden' => true), destroy_other_user_path(user), :method => :delete, :data => { :confirm => 'Are you sure?' }, :class => 'only-icon')

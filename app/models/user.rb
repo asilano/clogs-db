@@ -18,4 +18,12 @@ class User < ActiveRecord::Base
       super
     end
   end
+
+  def unauthenticated_message
+    if !approved?
+      :not_approved
+    else
+      super
+    end
+  end
 end

@@ -1,0 +1,6 @@
+$('#flash').html('<%== j render(partial: "shared/flash", object: flash) %>');
+
+<%- if @user %>
+  $("tr:contains('<%= @user.email %>')").find("span.icon-cross, span.icon-checkmark")
+      .toggleClass('icon-cross icon-checkmark');
+<%- end %>
