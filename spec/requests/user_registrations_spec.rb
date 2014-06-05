@@ -296,7 +296,7 @@ describe "approvals" do
       expect(page.all('a span.icon-cross').count).to eq 2
 
       page.find('tr', text: chair.email).first('a span.icon-cross').first(:xpath, './/..').click
-      wait_for_ajax
+      #wait_for_ajax
       expect(page).to have_css('#flash .notice', text: "Approved user: #{chair.email}")
       expect(page.all('a span.icon-cross').count).to eq 1
     end
