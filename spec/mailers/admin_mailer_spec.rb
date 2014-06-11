@@ -7,8 +7,8 @@ describe AdminMailer do
 
     it "renders the headers" do
       expect(mail.subject).to eq "User wants approval for Clogs Members"
-      expect(mail.to).to eq ["chowlett09@gmail.com"]
-      expect(mail.from).to eq ["chowlett09@gmail.com"]
+      expect(mail.to).to eq ["foo@example.com"]
+      expect(mail.from).to eq ["foo@example.com"]
     end
 
     it "renders the body" do
