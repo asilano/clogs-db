@@ -93,7 +93,6 @@ GEM
     erb2haml (0.1.5)
       html2haml
     erubis (2.7.0)
-    eventmachine (1.0.3)
     eventmachine (1.0.3-x86-mingw32)
     execjs (2.0.2)
     factory_girl (4.4.0)
@@ -213,7 +212,6 @@ GEM
       multi_json
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
-    spork (1.0.0rc4)
     spork (1.0.0rc4-x86-mingw32)
       win32-process
     spork-rails (4.0.0)
@@ -266,7 +264,7 @@ DEPENDENCIES
   attribute_normalizer
   better_errors
   binding_of_caller
-  capybara
+  capybara (~> 2.3.0)
   coffee-rails (~> 3.2.1)
   compass-rails
   coveralls
@@ -287,7 +285,7 @@ DEPENDENCIES
   rails (~> 3.2.1)
   rails_12factor
   rake
-  rspec-rails
+  rspec-rails (~> 2.14.0)
   sass (~> 3.1.0)
   sass-rails (~> 3.2.3)
   sassy-buttons

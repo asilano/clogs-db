@@ -26,7 +26,7 @@ gem 'pg'
 #end
 
 group :development, :test do
-  gem "rspec-rails"
+  gem "rspec-rails", '~> 2.14.0'
   gem "factory_girl_rails"
   gem "spork-rails"
 
@@ -46,7 +46,7 @@ group :test do
   gem "database_cleaner"
   gem "email_spec"
   gem "launchy"
-  gem "capybara"
+  gem "capybara", '~> 2.3.0'
   gem 'selenium-webdriver'
   gem 'coveralls', require: false
   gem 'timecop'

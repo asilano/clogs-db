@@ -3,7 +3,7 @@ require "spec_helper"
 describe AdminMailer do
   describe "approval_needed" do
     let(:user) { FactoryGirl.create(user) }
-    let(:mail) { Admin.approval_needed(user) }
+    let(:mail) { AdminMailer.approval_needed(user) }
 
     it "renders the headers" do
       mail.subject.should eq("User wants approval for Clogs Members")
