@@ -2,7 +2,7 @@ language: ruby
 rvm:
   - 1.9.3
 env:
-  - DEVISE_SECRET=c0ffee
+  - DEVISE_SECRET=c0ffee MAIL_SERV=example.com MAIL_PORT=587 MAIL_DOM=example.com MAIL_USER=foo MAIL_PASS=foo ADMIN_EMAIL=foo@example.com
 before_install:
   - rm Gemfile.lock
 script:
