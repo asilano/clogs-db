@@ -95,5 +95,6 @@ ActionMailer::Base.smtp_settings = {
   :user_name            => ENV['MAIL_USER'],
   :password             => ENV['MAIL_PASS'],
   :authentication       => "plain",
-  :enable_starttls_auto => true
+  :enable_starttls_auto => true,
+  :openssl_verify_mode  => 'none'
 }
