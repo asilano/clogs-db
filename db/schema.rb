@@ -11,7 +11,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140529111616) do
+ActiveRecord::Schema.define(:version => 20140612154513) do
+
+  create_table "mailing_lists", :force => true do |t|
+    t.string   "name",       :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "mailing_lists", ["name"], :name => "index_mailing_lists_on_name", :unique => true
+
+  create_table "mailing_lists_members", :id => false, :force => true do |t|
+    t.integer "mailing_list_id"
+    t.integer "member_id"
+  end
+
+  add_index "mailing_lists_members", ["mailing_list_id"], :name => "index_mailing_lists_members_on_mailing_list_id"
+  add_index "mailing_lists_members", ["member_id"], :name => "index_mailing_lists_members_on_member_id"
 
   create_table "members", :force => true do |t|
     t.string   "forename"
