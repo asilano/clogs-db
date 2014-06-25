@@ -73,6 +73,8 @@ module ClogsDb
 
     config.colorize_logging = false
 
+    config.autoload_paths += Dir["#{Rails.root}/lib/scaffold_module"]
+
     # don't generate RSpec tests for views and helpers
     config.generators do |g|
       g.test_framework :rspec, fixture: true

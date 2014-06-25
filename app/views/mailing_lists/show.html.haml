@@ -1,0 +1,8 @@
+%table
+  %tr
+    %th Name:
+    %td= @list.name
+
+= link_to 'Edit', edit_mailing_list_path(@list)
+\|
+= link_to 'Back', mailing_lists_path

@@ -91,6 +91,12 @@ describe "Members" do
     end
 
     describe "GET /members" do
+      it "displays tabbed navigation" do
+        visit members_path
+        expect(page).to have_css('.tab.current a', text: 'Members')
+        expect(page).to have_css('.tab a', text: 'Mailing lists')
+      end
+
       it "displays all members" do
         visit members_path
 
@@ -112,6 +118,13 @@ describe "Members" do
     end
 
     describe "GET show" do
+      it "displays tabbed navigation" do
+        visit member_path(@member.id)
+        expect(page).to have_css('.tab.current a', text: 'View member')
+        expect(page).to have_css('.tab a', text: 'Members')
+        expect(page).to have_css('.tab a', text: 'Mailing lists')
+      end
+
       it "displays the requested member" do
         visit member_path(@member.id)
 
@@ -138,6 +151,13 @@ describe "Members" do
     end
 
     describe "create member through form" do
+      it "displays tabbed navigation" do
+        visit new_member_path
+        expect(page).to have_css('.tab.current a', text: 'New member')
+        expect(page).to have_css('.tab a', text: 'Members')
+        expect(page).to have_css('.tab a', text: 'Mailing lists')
+      end
+
       it "creates the member with valid params" do
         max_id = Member.select(:id).order('id desc').first[:id]
         visit members_path
@@ -158,6 +178,13 @@ describe "Members" do
     end
 
     describe "edit member through form" do
+      it "displays tabbed navigation" do
+        visit edit_member_path(@member.id)
+        expect(page).to have_css('.tab.current a', text: 'Edit member')
+        expect(page).to have_css('.tab a', text: 'Members')
+        expect(page).to have_css('.tab a', text: 'Mailing lists')
+      end
+
       it "updates the member with valid params" do
         visit member_path(@wife)
         click_link 'Edit'

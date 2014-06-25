@@ -1,0 +1,20 @@
+%h1 All members
+%br
+
+= link_to 'New Mailing list', new_mailing_list_path
+
+%table.tablekit.sortable
+  %thead
+    %tr
+      %th.sortcol.sortfirstasc Name
+      %th.nosort
+
+  %tbody
+    - @lists.each do |list|
+      %tr
+        %td= list.name
+        %td= show_edit_delete_links(list)
+
+%br
+
+= link_to 'New Member', new_member_path

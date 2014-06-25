@@ -8,6 +8,7 @@ ClogsDb::Application.routes.draw do
   end
 
   resources :members
+  resources :mailing_lists
 
   root to: 'members#index'
 
