@@ -1,0 +1,5 @@
+- current ||= params[:controller]
+- action = params[:action]
+- %w<members mailing_lists>.each do |controller|
+  .tab{:class => (controller == current  && action == 'index') ? 'current' : '' }
+    = link_to controller.humanize, controller: controller

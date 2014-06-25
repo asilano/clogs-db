@@ -1,6 +1,7 @@
 $background-light-grey: #ddd;
 $background-dark-grey: #888;
 $background-near-white: #fafafa;
+$background-darker-white: #f0f0f0;
 $error-colour: #b50000;
 $ok-colour: #00b500;
 
@@ -11,3 +12,12 @@ $alert-colour: #eac300;
 
 $icon-grey: #888;
 $icon-black: #444;
+
+// Clearfix hack
+.group:after {
+  visibility: hidden;
+  display: block;
+  content: "";
+  clear: both;
+  height: 0;
+  }

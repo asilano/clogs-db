@@ -19,5 +19,9 @@
     #flash
       = render partial: 'shared/flash', object: flash
 
+    %nav.tabbedNav.group
+      = content_for :extra_tab
+      = render partial: 'shared/tabbed_nav'
+
     #content
       = yield

@@ -56,11 +56,13 @@ header p {
 }
 
 #content, #flash p {
-  margin: 1em;
+  position: relative;
+  margin: 0 1em 1em;
   padding: 0.5em 2em;
-  border-radius:5px;
+  border-radius: 5px;
   background-color: $background-near-white;
   box-shadow: 5px 5px rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
 #flash {
@@ -69,6 +71,34 @@ header p {
   }
   .alert {
     border: 2px solid $alert-colour;
+  }
+}
+
+.tabbedNav {
+  position: relative;
+  z-index: 0;
+
+  // Shift tabs down to hide top border radius
+  margin: 0 0 -5px 1em;
+}
+
+.tab {
+  float: left;
+  margin-right: 5px;
+
+  background-color: $background-darker-white;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 1.6em 5px 0 0;
+
+  &.current {
+  background-color: $background-near-white;
+  }
+
+  a, span {
+    display: inline-block;
+    padding: 0.5em 2em;
+    text-decoration: none;
+    color: black;
   }
 }
 

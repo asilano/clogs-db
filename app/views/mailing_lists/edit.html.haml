@@ -1,3 +1,7 @@
+- content_for :extra_tab do
+  .tab.current
+    %span Edit mailing list
+
 = render partial: 'form', locals: {:action => 'Editing'}
 
 = link_to 'Show', @list

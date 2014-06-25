@@ -1,3 +1,7 @@
+- content_for :extra_tab do
+  .tab.current
+    %span New member
+
 = render partial: 'form', locals: {action: 'New'}
 
 = link_to 'Back', members_path

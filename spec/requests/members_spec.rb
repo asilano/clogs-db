@@ -120,7 +120,7 @@ describe "Members" do
     describe "GET show" do
       it "displays tabbed navigation" do
         visit member_path(@member.id)
-        expect(page).to have_css('.tab.current a', text: 'View member')
+        expect(page).to have_css('.tab.current span', text: 'View member')
         expect(page).to have_css('.tab a', text: 'Members')
         expect(page).to have_css('.tab a', text: 'Mailing lists')
       end
@@ -153,7 +153,7 @@ describe "Members" do
     describe "create member through form" do
       it "displays tabbed navigation" do
         visit new_member_path
-        expect(page).to have_css('.tab.current a', text: 'New member')
+        expect(page).to have_css('.tab.current span', text: 'New member')
         expect(page).to have_css('.tab a', text: 'Members')
         expect(page).to have_css('.tab a', text: 'Mailing lists')
       end
@@ -180,7 +180,7 @@ describe "Members" do
     describe "edit member through form" do
       it "displays tabbed navigation" do
         visit edit_member_path(@member.id)
-        expect(page).to have_css('.tab.current a', text: 'Edit member')
+        expect(page).to have_css('.tab.current span', text: 'Edit member')
         expect(page).to have_css('.tab a', text: 'Members')
         expect(page).to have_css('.tab a', text: 'Mailing lists')
       end
