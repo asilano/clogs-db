@@ -57,7 +57,7 @@ describe MailingListsController do
         it "redirects to login" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(MailingList).to receive(:save).and_return(false)
-          post :create, {:mailing_list => { "forename" => "invalid value" }}
+          post :create, {:mailing_list => { "name" => "invalid value" }}
           expect(response).to redirect_to(new_user_session_path)
         end
       end
@@ -67,8 +67,8 @@ describe MailingListsController do
       describe "with valid params" do
         it "does not update the requested list" do
           list = MailingList.create! valid_attributes
-          expect_any_instance_of(MailingList).to_not receive(:update_attributes).with({ "forename" => "MyString" })
-          put :update, {:id => list.to_param, :mailing_list => { "forename" => "MyString" }}
+          expect_any_instance_of(MailingList).to_not receive(:update_attributes).with({ "name" => "MyString" })
+          put :update, {:id => list.to_param, :mailing_list => { "name" => "MyString" }}
         end
 
         it "redirects to login" do
@@ -83,7 +83,7 @@ describe MailingListsController do
           list = MailingList.create! valid_attributes
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(MailingList).to receive(:save).and_return(false)
-          put :update, {:id => list.to_param, :mailing_list => { "forename" => "invalid value" }}
+          put :update, {:id => list.to_param, :mailing_list => { "name" => "invalid value" }}
           expect(response).to redirect_to(new_user_session_path)
         end
       end
@@ -188,8 +188,8 @@ describe MailingListsController do
           # specifies that the MailingList created on the previous line
           # receives the :update_attributes message with whatever params are
           # submitted in the request.
-          expect_any_instance_of(MailingList).to receive(:update_attributes).with({ "forename" => "MyString" })
-          put :update, {:id => list.to_param, :mailing_list => { "forename" => "MyString" }}
+          expect_any_instance_of(MailingList).to receive(:update_attributes).with({ "name" => "MyString" })
+          put :update, {:id => list.to_param, :mailing_list => { "name" => "MyString" }}
         end
 
         it "assigns the requested list as @list" do
