@@ -73,6 +73,9 @@ describe "Members" do
     end
 
     before(:each) do
+      @list_one = FactoryGirl.create(:mailing_list, name: 'First list')
+      @list_two = FactoryGirl.create(:mailing_list, name: 'Second list')
+      @list_three = FactoryGirl.create(:mailing_list, name: 'Third list')
       @member = FactoryGirl.create(:member)
       @wife = FactoryGirl.create(:members_wife)
     end
@@ -119,6 +122,7 @@ describe "Members" do
         expect(page).to have_css('th', text: "Surname")
         expect(page).to have_css('th', text: "Membership")
         expect(page).to have_css('th', text: "Subs paid")
+        expect(page).to have_css('th', text: "Mailing lists")
 
         # A selection of fields for the first member
         expect(page).to have_css('td', text: @member.forename)
@@ -126,6 +130,10 @@ describe "Members" do
         expect(page).to have_css('td', text: @member.addr1)
         icon = @member.concert_fee_paid ? 'checkmark' : 'cross'
         expect(page).to have_css("td span.icon-#{icon}")
+        @member.mailing_lists.each do |list|
+          expect(page).to have_css('td a', text: list.name)
+        end
+
         expect(page).to_not have_css('td', text: @wife.forename)
 
         visit member_path(@wife.id)
@@ -133,7 +141,19 @@ describe "Members" do
         expect(page).to have_css('td', text: @wife.forename)
         expect(page).to have_css('td', text: @wife.email)
         expect(page).to have_css('td', text: @wife.addr1)
+        @wife.mailing_lists.each do |list|
+          expect(page).to have_css('td a', text: list.name)
+        end
+
         expect(page).to_not have_css('td', text: @member.forename)
+      end
+
+      it "links to each mailing list" do
+        @wife.mailing_lists.each do |list|
+          visit member_path(@wife.id)
+          click_link list.name
+          expect(current_path).to eq mailing_list_path(list)
+        end
       end
     end
 
@@ -147,16 +167,22 @@ describe "Members" do
 
       it "creates the member with valid params" do
         max_id = Member.select(:id).order('id desc').first[:id]
+
         visit members_path
         page.first('a', text: 'New Member').click
 
         fill_in 'Forename', with: 'Bob'
         fill_in 'Surname', with: 'Roberts'
+        check(@list_one.name)
+        check(@list_three.name)
         click_button 'Save'
 
         expect(current_path).to eq member_path(max_id + 1)
         expect(Member.last.forename).to eq 'Bob'
+        expect(Member.last.mailing_lists.map(&:name)).to match_array [@list_one.name, @list_three.name]
         expect(page).to have_content('Roberts')
+        expect(page).to have_content(@list_three.name)
+        expect(page).to_not have_content(@list_two.name)
       end
 
       it "redisplays the create form with invalid params" do

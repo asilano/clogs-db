@@ -18,6 +18,8 @@ FactoryGirl.define do
     subs_paid true
     show_fee_paid false
     concert_fee_paid true
+
+    after(:create) {|member| member.mailing_lists = [MailingList.first || create(:mailing_list)]}
   end
 
   factory :members_wife, parent: :member do
@@ -26,5 +28,7 @@ FactoryGirl.define do
     voice 'Soprano'
     membership 'Non-Performing'
     concert_fee_paid false
+
+    after(:create) {|wife| wife.mailing_lists << create(:small_mailing_list)}
   end
 end

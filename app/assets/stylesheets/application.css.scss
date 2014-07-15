@@ -162,11 +162,21 @@ fieldset {
   padding-top: 0;
   margin: 5px 0;
 
-  div {
+  .field {
     margin: 10px 0;
     label {
       float: left;
       width: 10em;
+    }
+  }
+
+  .field.table-row {
+    display: table;
+    .table-head {
+      width: 10em;
+    }
+    div {
+      display: table-cell;
     }
   }
 
@@ -187,6 +197,10 @@ fieldset {
 td, th {
   border: 1px solid black;
   padding: 1px 5px;
+}
+
+.show_model th {
+  vertical-align: top;
 }
 
 thead {

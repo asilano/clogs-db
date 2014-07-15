@@ -56,5 +56,13 @@
     .field
       = f.label :concert_fee_paid
       = f.check_box :concert_fee_paid
+    .field.table-row
+      .table-head Mailing Lists
+      %div
+        - MailingList.all.each do |list|
+          %label
+            = check_box_tag(:list_ids, list.id, @member.mailing_lists.include?(list), name: "member[mailing_list_ids][]")
+            = list.name
+          %br
   .actions
     = f.submit 'Save'
