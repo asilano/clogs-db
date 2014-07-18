@@ -17,6 +17,7 @@
 @import "fonts";
 @import "icons";
 @import "tablekit";
+@import "checkbox-hack";
 
 * {
   @include box-sizing(border-box);
@@ -133,6 +134,10 @@ header p {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: Cambria, Georgia, serif;
+}
+
+.hidden {
+  display: none;
 }
 
 button, input[type=button], input[type=submit], a.button {

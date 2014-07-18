@@ -6,6 +6,13 @@
   %tr
     %th Name:
     %td= @list.name
+  %tr
+    %th Members:
+    %td
+      = check_box_hack pluralize(@list.members.count, 'member') + " (of #{Member.count} total)", "members_list" do
+        - @list.members.each do |member|
+          = link_to("#{member.forename} #{member.surname}", member_path(member))
+          %br
 
 = link_to 'Edit', edit_mailing_list_path(@list)
 \|

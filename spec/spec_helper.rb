@@ -40,6 +40,7 @@ RSpec.configure do |config|
   config.include Capybara::DSL
   config.include(MailerMacros)
   config.include Devise::TestHelpers, :type => :controller
+  config.include ActionView::Helpers::TextHelper
 
   config.expect_with(:rspec) { |c| c.syntax = :expect }
 

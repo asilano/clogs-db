@@ -12,6 +12,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-caret-down:before {
+  content: "\f0d7";
+}
+.icon-caret-right:before {
+  content: "\f0da";
+}
 .icon-pencil:before {
   content: "\e600";
 }

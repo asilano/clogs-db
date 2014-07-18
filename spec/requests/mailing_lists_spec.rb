@@ -75,6 +75,18 @@ describe "MailingLists" do
     before(:each) do
       @mailing_list = FactoryGirl.create(:mailing_list)
       @sub_list = FactoryGirl.create(:small_mailing_list)
+      @empty_list = FactoryGirl.create(:mailing_list, name: 'Empty List')
+
+      @member1 = FactoryGirl.create(:member, forename: 'John', surname: 'Smith')
+      @member2 = FactoryGirl.create(:member, forename: 'Jane', surname: 'Doe')
+      @member3 = FactoryGirl.create(:member, forename: 'Bob', surname: 'Patron')
+
+      @member1.mailing_lists = [@mailing_list, @sub_list]
+      @member2.mailing_lists = [@mailing_list]
+      @member3.mailing_lists = [@mailing_list, @sub_list]
+      @member1.save!
+      @member2.save!
+      @member3.save!
     end
 
     describe "GET /mailing_lists" do
@@ -114,6 +126,35 @@ describe "MailingLists" do
         expect(page).to have_css('td', text: @sub_list.name)
         expect(page).to_not have_css('td', text: @mailing_list.name)
       end
+
+      it "displays a count of members" do
+        visit mailing_list_path(@mailing_list)
+        expect(page).to have_css('th', text: 'Members')
+        expect(page).to have_css('td', text: pluralize(@mailing_list.members.count, 'member') + " (of #{Member.count} total)")
+      end
+
+      it "allows expansion of members list" do
+        pending "Capybara can't tell it's hidden"
+        visit mailing_list_path(@mailing_list)
+        expect(page).to_not have_content(@mailing_list.members.first.surname)
+
+        page.first('label', text: pluralize(@mailing_list.members.count, 'member')).click
+        expect(page).to have_content(@mailing_list.members.first.surname)
+        expect(page).to have_content(@mailing_list.members.last.surname)
+      end
+
+      describe "with js", js: true do
+        it "allows expansion of members list" do
+          visit mailing_list_path(@mailing_list)
+          fullname = @mailing_list.members.first.forename + " " + @mailing_list.members.first.surname
+          expect(page).to_not have_css('a', text: fullname, visible: true)
+
+          page.first('label', text: pluralize(@mailing_list.members.count, 'member')).click
+          expect(page).to have_css('a', text: fullname, visible: true)
+          fullname = @mailing_list.members.last.forename + " " + @mailing_list.members.last.surname
+          expect(page).to have_css('a', text: fullname, visible: true)
+        end
+      end
     end
 
     describe "create mailing_list through form" do
@@ -136,6 +177,8 @@ describe "MailingLists" do
         expect(MailingList.last.name).to eq 'Basses only'
         expect(page).to have_content('Basses only')
       end
+
+      it "allows selection of members"
 
       describe "redisplays the create form with invalid params" do
         it "rejects absent name" do
@@ -183,6 +226,8 @@ describe "MailingLists" do
         expect(page).to have_content('Tenors only')
       end
 
+      it "allows selection of members"
+
       describe "redisplays the edit form with invalid params" do
         it "rejects absent name" do
           visit edit_mailing_list_path(@sub_list.id)
@@ -217,6 +262,8 @@ describe "MailingLists" do
         expect(MailingList.where { name == old_name }.first).to be_nil
         expect(current_path).to eq mailing_lists_path
       end
+
+      it "does not destroy members"
     end
   end
 end

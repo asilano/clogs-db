@@ -1,0 +1,25 @@
+.checkbox-hack {
+  display: none;
+
+  & + .checkbox-controlled {
+    display: none;
+  }
+
+  &:checked + .checkbox-controlled {
+    display: block;
+  }
+}
+
+.checkbox-controlled {
+  margin-left: 1em;
+}
+
+.checkbox-hack-expander {
+  display: inline-block;
+  transition: transform 0.1s ease;
+
+  &.rotated-45deg {
+    transform-origin: center center;
+    transform: rotate(45deg);
+  }
+}

@@ -10,4 +10,12 @@ module ApplicationHelper
     content_tag(:span, '', :class => bool ? 'icon-checkmark' : 'icon-cross', 'aria-hidden' => true)
   end
 
+  def check_box_hack(label_contents, hack_id, &controlled_contents)
+    checkbox = check_box_tag hack_id, nil, false, class: 'checkbox-hack'
+    label = label_tag hack_id, content_tag(:span, nil, class: 'checkbox-hack-expander icon-caret-right') + " " + raw(label_contents)
+    controlled_div = content_tag(:div, nil, {class: 'checkbox-controlled'}, &controlled_contents)
+
+    label + checkbox + controlled_div
+  end
+
 end
