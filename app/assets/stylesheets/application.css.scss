@@ -173,6 +173,16 @@ fieldset {
       float: left;
       width: 10em;
     }
+
+    select {
+      float: left;
+    }
+
+    &.with-descr span {
+      vertical-align: top;
+      white-space: pre;
+      margin-left: 1em;
+    }
   }
 
   .field.table-row {

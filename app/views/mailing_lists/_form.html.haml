@@ -11,5 +11,11 @@
     .field
       = f.label :name
       = f.text_field :name
+    .field.with-descr
+      = f.label :member_ids, 'Members'
+      = f.collection_select :member_ids, Member.all, :id, :fullname, {include_blank: 'None'}, multiple: true, size: [25, Member.count].min
+      %span Hold &lt;Ctrl&gt; to select/deselect multiple members.
+      %br
+      %span Hold &lt;Shift&gt; to select/deselect a range of members.
   .actions
     = f.submit 'Save'

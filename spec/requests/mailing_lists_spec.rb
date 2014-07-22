@@ -178,7 +178,15 @@ describe "MailingLists" do
         expect(page).to have_content('Basses only')
       end
 
-      it "allows selection of members"
+      it "allows selection of members" do
+        visit new_mailing_list_path
+        fill_in 'Name', with: "Choosing some members"
+
+        page.select "#{@member1.forename} #{@member1.surname}", from: 'Members'
+        page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
+        click_button 'Save'
+        expect(MailingList.last.members).to match_array [@member1, @member2]
+      end
 
       describe "redisplays the create form with invalid params" do
         it "rejects absent name" do
@@ -226,7 +234,21 @@ describe "MailingLists" do
         expect(page).to have_content('Tenors only')
       end
 
-      it "allows selection of members"
+      it "allows selection of members" do
+        visit mailing_list_path(@sub_list)
+        click_link 'Edit'
+
+        page.unselect "#{@member1.forename} #{@member1.surname}", from: 'Members'
+        page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
+        click_button 'Save'
+        expect(MailingList.find(@sub_list).members).to match_array [@member2, @member3]
+
+        click_link 'Edit'
+        page.unselect "#{@member2.forename} #{@member2.surname}", from: 'Members'
+        page.unselect "#{@member3.forename} #{@member3.surname}", from: 'Members'
+        click_button 'Save'
+        expect(MailingList.find(@sub_list).members).to be_empty
+      end
 
       describe "redisplays the edit form with invalid params" do
         it "rejects absent name" do
@@ -263,7 +285,11 @@ describe "MailingLists" do
         expect(current_path).to eq mailing_lists_path
       end
 
-      it "does not destroy members"
+      it "does not destroy members" do
+        visit mailing_lists_path
+        page.first('a span.icon-remove').find(:xpath, '..').click
+        expect(Member.find(@member1.id)).to_not be_nil
+      end
     end
   end
 end

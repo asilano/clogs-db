@@ -3,4 +3,8 @@ class Member < ActiveRecord::Base
                   :phone, :postcode, :show_fee_paid, :subs_paid, :surname, :town, :voice,
                   :mailing_list_ids
   has_and_belongs_to_many :mailing_lists
+
+  def fullname
+    "#{forename} #{surname}"
+  end
 end
