@@ -4,7 +4,7 @@ class Member < ActiveRecord::Base
                   :mailing_list_ids
   has_and_belongs_to_many :mailing_lists
 
-  default_scope order('surname, forename')
+  scope :name_order, -> { order('surname, forename') }
 
   def fullname
     "#{forename} #{surname}"
