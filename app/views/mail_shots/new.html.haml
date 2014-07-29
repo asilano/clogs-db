@@ -1,0 +1,14 @@
+= form_tag mail_shots_path do
+  %fieldset
+    %legend= "Compose mail shot"
+    .field
+      = label_tag :mailing_list_id, "Mailing list"
+      = select_tag :mailing_list_id, options_from_collection_for_select(MailingList.all, "id", "name")
+    .field.with-descr
+      = label_tag :body, 'Mail shot text'
+      = text_area_tag :body, nil, rows: 25, cols: 80
+      %span Describe mail-merge here
+      %br
+      %span &lt;fields&gt;
+  .actions
+    = submit_tag 'Send'

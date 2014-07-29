@@ -79,6 +79,11 @@ GEM
       debugger-ruby_core_source (~> 1.3.2)
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.3.2)
+    delayed_job (4.0.2)
+      activesupport (>= 3.0, < 4.2)
+    delayed_job_active_record (4.0.1)
+      activerecord (>= 3.0, < 4.2)
+      delayed_job (>= 3.0, < 4.1)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -93,7 +98,9 @@ GEM
     erb2haml (0.1.5)
       html2haml
     erubis (2.7.0)
+    eventmachine (1.0.3)
     eventmachine (1.0.3-x86-mingw32)
+    excon (0.38.0)
     execjs (2.0.2)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
@@ -112,6 +119,9 @@ GEM
       activesupport (>= 3.1, < 4.1)
       haml (>= 3.1, < 4.1)
       railties (>= 3.1, < 4.1)
+    heroku-api (0.3.19)
+      excon (~> 0.38)
+      multi_json (~> 1.8)
     hike (1.2.3)
     hpricot (0.8.6)
     html2haml (1.0.1)
@@ -192,6 +202,8 @@ GEM
     ruby_parser (3.1.3)
       sexp_processor (~> 4.1)
     rubyzip (1.1.3)
+    rush (0.6.8)
+      session
     sass (3.1.21)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
@@ -204,6 +216,7 @@ GEM
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
       websocket (~> 1.0.4)
+    session (3.2.0)
     sexp_processor (4.4.3)
     shoulda-matchers (2.6.1)
       activesupport (>= 3.0.0)
@@ -212,6 +225,7 @@ GEM
       multi_json
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
+    spork (1.0.0rc4)
     spork (1.0.0rc4-x86-mingw32)
       win32-process
     spork-rails (4.0.0)
@@ -253,6 +267,11 @@ GEM
     websocket (1.0.7)
     win32-process (0.7.4)
       ffi (>= 1.0.0)
+    workless (1.1.3)
+      delayed_job (>= 2.0.7)
+      heroku-api
+      rails
+      rush
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
@@ -270,6 +289,7 @@ DEPENDENCIES
   coveralls
   database_cleaner
   debugger
+  delayed_job_active_record
   devise
   email_spec
   erb2haml
@@ -297,3 +317,4 @@ DEPENDENCIES
   timecop
   uglifier (>= 1.0.3)
   unicorn
+  workless (~> 1.1.3)

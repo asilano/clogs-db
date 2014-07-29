@@ -174,14 +174,16 @@ fieldset {
       width: 10em;
     }
 
-    select {
-      float: left;
-    }
+    &.with-descr {
+      select, textarea {
+        float: left;
+      }
 
-    &.with-descr span {
-      vertical-align: top;
-      white-space: pre;
-      margin-left: 1em;
+      span {
+          vertical-align: top;
+          white-space: pre;
+          margin-left: 1em;
+      }
     }
   }
 

@@ -9,6 +9,7 @@ ClogsDb::Application.routes.draw do
 
   resources :members
   resources :mailing_lists
+  resources :mail_shots, only: [:new, :create]
 
   root to: 'members#index'
 

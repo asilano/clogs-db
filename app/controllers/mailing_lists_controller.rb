@@ -47,7 +47,7 @@ class MailingListsController < ApplicationController
 
     respond_to do |format|
       if @list.save
-        format.html { redirect_to @list, notice: 'MailingList was successfully created.' }
+        format.html { redirect_to @list, notice: 'Mailing List was successfully created.' }
         format.json { render json: @list, status: :created, location: @list }
       else
         format.html { render action: "new" }
@@ -63,7 +63,7 @@ class MailingListsController < ApplicationController
 
     respond_to do |format|
       if @list.update_attributes(params[:mailing_list])
-        format.html { redirect_to @list, notice: 'MailingList was successfully updated.' }
+        format.html { redirect_to @list, notice: 'Mailing List was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
