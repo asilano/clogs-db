@@ -17,6 +17,6 @@ class MailShotsController < ApplicationController
       flash[:error] = "You must specify a mailing list"
     end
 
-    redirect_to action: :new
+    redirect_to action: :new, mailing_list_id: 1
   end
 end

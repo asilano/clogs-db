@@ -7,7 +7,7 @@ describe MailShotsController do
   describe "while logged out" do
     describe "GET new" do
       it "redirects to login" do
-        get :new, {}
+        get :new, {mailing_list_id: 1}
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -46,7 +46,7 @@ describe MailShotsController do
       end
 
       it "leaves the mailing list as nil if not given" do
-        get :new, {}
+        get :new, {:mailing_list_id => ''}
         expect(assigns(:list)).to be_nil
       end
     end
