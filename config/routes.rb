@@ -9,7 +9,12 @@ ClogsDb::Application.routes.draw do
 
   resources :members
   resources :mailing_lists
-  resources :mail_shots, only: [:new, :create]
+
+
+  scope 'mail_shots' do
+    get 'new/:mailing_list_id', to: 'mail_shots#new', as: 'new_mail_shot', defaults: {mailing_list_id: 1}
+    post 'create', to: 'mail_shots#create', as: 'create_mail_shot'
+  end
 
   root to: 'members#index'
 

@@ -1,4 +1,4 @@
-%h1 All members
+%h1 All mailing lists
 %br
 
 = link_to 'New Mailing list', new_mailing_list_path
@@ -13,7 +13,7 @@
     - @lists.each do |list|
       %tr
         %td= list.name
-        %td= show_edit_delete_links(list)
+        %td= icon_link('envelope', new_mail_shot_path(mailing_list_id: list)) + show_edit_delete_links(list)
 
 %br
 

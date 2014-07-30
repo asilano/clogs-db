@@ -13,7 +13,9 @@
         - @list.members.name_order.each do |member|
           = link_to(member.fullname, member_path(member))
           %br
-
+%div
+  = icon_link 'envelope', new_mail_shot_path(@list)
+  = link_to 'Email this list', new_mail_shot_path(@list)
 = link_to 'Edit', edit_mailing_list_path(@list)
 \|
 = link_to 'Back', mailing_lists_path

@@ -1,9 +1,12 @@
 module ApplicationHelper
+  def icon_link(icon, target, options = {})
+    options[:class] ||= ''
+    options[:class] += ' only-icon'
+    link_to content_tag(:span, nil, class: "icon-#{icon}", 'aria-hidden' => true), target, options
+  end
+
   def show_edit_delete_links(object)
-    html = link_to(content_tag(:span, '', :class => 'icon-eye', 'aria-hidden' => true), object, :class => 'only-icon')
-    html << link_to(content_tag(:span, '', :class => 'icon-pencil', 'aria-hidden' => true), edit_polymorphic_path(object), :class => 'only-icon')
-    html << link_to(content_tag(:span, '', :class => 'icon-remove', 'aria-hidden' => true),
-                   object, :method => :delete, :data => { :confirm => 'Are you sure?' }, :class => 'only-icon')
+    icon_link('eye', object) + icon_link('pencil', edit_polymorphic_path(object)) + icon_link('remove', object, method: :delete, data: {confirm: 'Are you sure?'})
   end
 
   def tick_or_cross(bool)

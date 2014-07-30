@@ -12,7 +12,7 @@ describe 'MailShots' do
 
     describe "POST create" do
       it "redirects to login" do
-        post mail_shots_path, { mailing_list_id: 1, body: "Hello" }
+        post create_mail_shot_path, { mailing_list_id: 1, body: "Hello" }
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -28,21 +28,43 @@ describe 'MailShots' do
       click_button 'Sign in'
     end
 
+    before(:each) do
+      @mailing_list = FactoryGirl.create(:mailing_list)
+      @sub_list = FactoryGirl.create(:small_mailing_list)
+      @empty_list = FactoryGirl.create(:mailing_list, name: 'Empty List')
+
+      @member1 = FactoryGirl.create(:member, forename: 'John', surname: 'Smith')
+      @member2 = FactoryGirl.create(:member, forename: 'Jane', surname: 'Doe')
+      @member3 = FactoryGirl.create(:member, forename: 'Bob', surname: 'Patron')
+
+      @member1.mailing_lists = [@mailing_list, @sub_list]
+      @member2.mailing_lists = [@mailing_list]
+      @member3.mailing_lists = [@mailing_list, @sub_list]
+      @member1.save!
+      @member2.save!
+      @member3.save!
+    end
+
     describe "access creation page" do
       it "should be accessible directly" do
         visit new_mail_shot_path
-        expect(page).to have_field :mailing_list_id
+        expect(page).to have_select :mailing_list_id
         expect(page).to have_field :body
       end
 
       it "should be accessible via Mailing List index" do
         visit mailing_lists_path
-        page.first('a .icon-envelope').click
-        expect(page).to have_field :mailing_list_id
+        page.first('a .icon-envelope').find(:xpath, '..').click
+        expect(page).to have_select(:mailing_list_id, selected: MailingList.first.name)
         expect(page).to have_field :body
       end
 
-      it "should be accessible via Mailing List show page"
+      it "should be accessible via Mailing List show page" do
+        visit mailing_list_path(@sub_list)
+        click_link 'Email this list'
+        expect(page).to have_select(:mailing_list_id, selected: @sub_list.name)
+        expect(page).to have_field :body
+      end
 
     end
 

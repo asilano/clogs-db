@@ -1,9 +1,9 @@
-= form_tag mail_shots_path do
+= form_tag create_mail_shot_path do
   %fieldset
     %legend= "Compose mail shot"
     .field
       = label_tag :mailing_list_id, "Mailing list"
-      = select_tag :mailing_list_id, options_from_collection_for_select(MailingList.all, "id", "name")
+      = select_tag :mailing_list_id, options_from_collection_for_select(MailingList.all, "id", "name", @list.andand.id)
     .field.with-descr
       = label_tag :body, 'Mail shot text'
       = text_area_tag :body, nil, rows: 25, cols: 80
