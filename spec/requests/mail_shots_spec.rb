@@ -33,9 +33,9 @@ describe 'MailShots' do
       @sub_list = FactoryGirl.create(:small_mailing_list)
       @empty_list = FactoryGirl.create(:mailing_list, name: 'Empty List')
 
-      @member1 = FactoryGirl.create(:member, forename: 'John', surname: 'Smith')
-      @member2 = FactoryGirl.create(:member, forename: 'Jane', surname: 'Doe')
-      @member3 = FactoryGirl.create(:member, forename: 'Bob', surname: 'Patron')
+      @member1 = FactoryGirl.create(:member, forename: 'John', surname: 'Smith', email: 'j.smith@example.com')
+      @member2 = FactoryGirl.create(:member, forename: 'Jane', surname: 'Doe', email: 'janed@example.com')
+      @member3 = FactoryGirl.create(:member, forename: 'Bob', surname: 'Patron', email: 'patronb@example.com')
 
       @member1.mailing_lists = [@mailing_list, @sub_list]
       @member2.mailing_lists = [@mailing_list]
@@ -49,6 +49,7 @@ describe 'MailShots' do
       it "should be accessible directly" do
         visit new_mail_shot_path
         expect(page).to have_select :mailing_list_id
+        expect(page).to have_field :subject
         expect(page).to have_field :body
       end
 
@@ -56,6 +57,7 @@ describe 'MailShots' do
         visit mailing_lists_path
         page.first('a .icon-envelope').find(:xpath, '..').click
         expect(page).to have_select(:mailing_list_id, selected: MailingList.first.name)
+        expect(page).to have_field :subject
         expect(page).to have_field :body
       end
 
@@ -63,15 +65,48 @@ describe 'MailShots' do
         visit mailing_list_path(@sub_list)
         click_link 'Email this list'
         expect(page).to have_select(:mailing_list_id, selected: @sub_list.name)
+        expect(page).to have_field :subject
         expect(page).to have_field :body
       end
 
     end
 
     describe "create mail shot" do
-      it "should create a delayed job"
+      before :each do
+        reset_email
+      end
 
-      it "should send emails when the job happens"
+      it "should create a delayed job" do
+        visit new_mail_shot_path(mailing_list_id: @sub_list)
+        fill_in :subject, with: "Test email"
+        fill_in :body, with: "Hello,\n\nThis is a test email."
+
+        expect { click_button 'Send' }.to change { Delayed::Job.count }.by 1
+
+        expect(last_email).to be_nil
+      end
+
+      it "should send emails when the job happens" do
+        subject = "Test email"
+        body = "Hello,\n\nThis is a test email."
+
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        click_button 'Send'
+
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq @sub_list.members.count
+
+        @sub_list.members.zip(all_emails) do |row|
+          member = row[0]
+          email = row[1]
+          expect(email.to).to eq [member.email]
+          expect(email.subject).to eq subject
+          expect(email.body).to eq body
+        end
+      end
 
       it "should allow mail-merge fields"
 

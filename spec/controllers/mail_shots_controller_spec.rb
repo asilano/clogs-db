@@ -36,7 +36,7 @@ describe MailShotsController do
     before(:each) do
       sign_in user
       @mock_delay = double('mock_delay').as_null_object
-      MailShotsController.any_instance.stub(:delay).and_return @mock_delay
+      MailShot.any_instance.stub(:delay).and_return @mock_delay
     end
 
     describe "GET new" do
@@ -64,7 +64,7 @@ describe MailShotsController do
         end
 
         it "delays creating the emails" do
-          expect(@mock_delay).to receive(:send_emails).with HashWithIndifferentAccess.new(valid_attributes)
+          expect(@mock_delay).to receive(:send_emails).with no_args
           post :create, valid_attributes
         end
       end

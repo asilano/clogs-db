@@ -11,7 +11,7 @@ class MailShotsController < ApplicationController
 
     if @list
       # Queue sending mail here
-      delay.send_emails(params.slice :mailing_list_id, :body)
+      MailShot.new(params.slice :mailing_list_id, :subject, :body).delay.send_emails
       flash[:notice] = "Emails created, and queued for delivery"
     else
       flash[:error] = "You must specify a mailing list"
