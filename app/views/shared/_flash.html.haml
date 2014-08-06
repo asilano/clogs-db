@@ -1,3 +1,4 @@
 - flash.each do |name, msg|
-  - if msg.is_a? String
-    %p{class: name}= msg
+  - if msg.is_a?(String) && !msg.blank?
+    %div{class: name}
+      = msg.html_safe

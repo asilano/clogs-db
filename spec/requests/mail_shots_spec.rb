@@ -117,6 +117,45 @@ describe 'MailShots' do
       it "should error if mailing list is non-existent"
 
       it "should error if body is absent"
+
+      it "should warn about members with no email address" do
+        @member1.email = nil
+        @member2.email = 'fake-email'
+        @member1.save
+        @member2.save
+
+        visit new_mail_shot_path(mailing_list_id: @mailing_list)
+        fill_in :subject, with: "Test email"
+        fill_in :body, with: "Hello,\n\nThis is a test email."
+        click_button "Send"
+
+        expect(page).to have_content('The following members will not be emailed, as they do not have a configured email address')
+        expect(page).to have_css('li', text: @member1.fullname)
+        expect(page).to have_css('li', text: @member2.fullname)
+      end
+
+      it "should ignore members with no email address" do
+        @member1.email = nil
+        @member2.email = "fake-emil"
+        @member1.save
+        @member2.save
+
+        visit new_mail_shot_path(mailing_list_id: @mailing_list)
+        fill_in :subject, with: "Test email"
+        fill_in :body, with: "Hello,\n\nThis is a test email."
+        click_button "Send"
+
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq @mailing_list.members.count - 2
+
+        @mailing_list.members.reject { |m| m == @member1 || m == @member2 }.zip(all_emails) do |row|
+          member = row[0]
+          email = row[1]
+          expect(email.to).to eq [member.email]
+          expect(email.subject).to eq 'Test email'
+          expect(email.body).to eq "Hello,\n\nThis is a test email."
+        end
+      end
     end
   end
 end
