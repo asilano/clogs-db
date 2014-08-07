@@ -108,15 +108,118 @@ describe 'MailShots' do
         end
       end
 
-      it "should allow mail-merge fields"
+      it "should perform simple mail-merge" do
+        subject = "Test email"
+        body = "Hello <forename>,\n\nThis is a test email."
 
-      it "should ignore wrong mail-merge fields"
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        click_button 'Send'
+
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq @sub_list.members.count
+
+        @sub_list.members.zip(all_emails) do |row|
+          member = row[0]
+          email = row[1]
+          expect(email.to).to eq [member.email]
+          expect(email.subject).to eq subject
+          expect(email.body).to eq body.sub(/<forename>/, member.forename)
+        end
+      end
+
+      it "should merge all mergable fields" do
+        @mailing_list.members = [@member1]
+        @mailing_list.save
+        subject = 'Test email'
+        body = <<EOD
+<forename>
+<surname>
+<fullname>
+<addr1>
+<addr2>
+<addr3>
+<town>
+<county>
+<postcode>
+<address>
+<phone>
+<mobile>
+<voice>
+<membership>
+<email>
+<subs_paid>
+<show_fee_paid>
+<concert_fee_paid>
+<mailing_list_names>
+EOD
+        expected_body = <<EOD
+John
+Smith
+John Smith
+123 High Street
+Second Floor
+Office 2
+Chippenham
+Wiltshire
+SN1 1NS
+123 High Street
+Second Floor
+Office 2
+Chippenham
+Wiltshire
+SN1 1NS
+01249123456
+07777123456
+Tenor
+Performing
+j.smith@example.com
+true
+false
+true
+Publicity, Only some members
+EOD
+        visit new_mail_shot_path
+        select @mailing_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        click_button 'Send'
+
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(last_email.body).to eq expected_body
+      end
+
+      it "should ignore wrong mail-merge fields" do
+        subject = "Test email"
+        body = "Hello <forename>,\n\nThis is a <test> email."
+
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        click_button 'Send'
+
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq @sub_list.members.count
+
+        @sub_list.members.zip(all_emails) do |row|
+          member = row[0]
+          email = row[1]
+          expect(email.to).to eq [member.email]
+          expect(email.subject).to eq subject
+          expect(email.body).to include "<test>"
+        end
+      end
 
       it "should error if mailing list is absent"
 
       it "should error if mailing list is non-existent"
 
       it "should error if body is absent"
+
+      it "should error if subject is absent"
 
       it "should warn about members with no email address" do
         @member1.email = nil

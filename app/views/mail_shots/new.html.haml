@@ -10,8 +10,25 @@
     .field.with-descr
       = label_tag :body, 'Mail shot text'
       = text_area_tag :body, nil, rows: 25, cols: 80
-      %span Describe mail-merge here
+      %span You can specify various fields between &lt;angle brackets&gt;.
       %br
-      %span &lt;fields&gt;
+      %span The fields will be replaced by the relevant value from each member before the email is sent.
+      %br
+      %span The following fields are avilable: &lt;forename&gt;, &lt;surname&gt;,
+      %br
+      %span &lt;addr1&gt;, &lt;addr2&gt;, &lt;addr3&gt;, &lt;town&gt;, &lt;county&gt;, &lt;postcode&gt;,
+      %br
+      %span &lt;phone&gt;, &lt;mobile&gt;, &lt;voice&gt;, &lt;membership&gt;, &lt;email&gt;,
+      %br
+      %span  &lt;subs_paid&gt;, &lt;show_fee_paid&gt;, &lt;concert_fee_paid&gt;
+      %br
+      %br
+      %span Additionally, the following compound fields are available:
+      %br
+      %span &lt;fullname&gt; =&gt; &quot;John Smith&quot;
+      %br
+      %span &lt;address&gt; =&gt; Full address over multiple lines
+      %br
+      %span &lt;mailing_list_names&gt; =&gt; The name of each mailing list the member is on, in one line with commas
   .actions
     = submit_tag 'Send'

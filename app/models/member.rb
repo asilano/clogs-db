@@ -9,4 +9,12 @@ class Member < ActiveRecord::Base
   def fullname
     "#{forename} #{surname}"
   end
+
+  def address
+    [addr1, addr2, addr3, town, county, postcode].reject(&:blank?).join("\n")
+  end
+
+  def mailing_list_names
+    mailing_lists.map(&:name).join(', ')
+  end
 end
