@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe MailShotsController do
   let(:mailing_list) { FactoryGirl.create(:mailing_list) }
-  let(:valid_attributes) { {mailing_list_id: mailing_list.id.to_s, body: "Hello"} }
+  let(:valid_attributes) { {mailing_list_id: mailing_list.id.to_s, subject: 'Test', body: "Hello"} }
 
   describe "while logged out" do
     describe "GET new" do
@@ -55,7 +55,7 @@ describe MailShotsController do
       describe "with valid params" do
         it "redirects to the new mail-shot page" do
           post :create, valid_attributes
-          expect(response).to redirect_to(new_mail_shot_path)
+          expect(response).to redirect_to(new_mail_shot_path mailing_list_id: mailing_list.id)
         end
 
         it "has a successful flash" do
