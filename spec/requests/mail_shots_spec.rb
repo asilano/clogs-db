@@ -213,13 +213,36 @@ EOD
         end
       end
 
-      it "should error if mailing list is absent"
+      it "should error if body is absent" do
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: "Test subject"
+        fill_in :body, with: ''
 
-      it "should error if mailing list is non-existent"
+        expect { click_button 'Send' }.to_not change { Delayed::Job.count }
+        expect(page).to have_css('#flash .error', text: "Mail shot is missing its body")
+      end
 
-      it "should error if body is absent"
+      it "should error if subject is absent" do
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: ''
+        fill_in :body, with: 'Test body'
 
-      it "should error if subject is absent"
+        expect { click_button 'Send' }.to_not change { Delayed::Job.count }
+        expect(page).to have_css('#flash .error', text: "Mail shot is missing its subject")
+      end
+
+      it "should give both errors if subject and body are absent" do
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: ''
+        fill_in :body, with: ''
+
+        expect { click_button 'Send' }.to_not change { Delayed::Job.count }
+        expect(page).to have_css('#flash .error', text: "Mail shot is missing its subject")
+        expect(page).to have_css('#flash .error', text: "Mail shot is missing its body")
+      end
 
       it "should warn about members with no email address" do
         @member1.email = nil

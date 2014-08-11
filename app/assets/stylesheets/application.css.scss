@@ -50,6 +50,7 @@ header p {
   left: 100%;
   width: 400px;
   margin-left: -400px;
+  margin-bottom: 1em;
   padding: 0.5em 2em;
   border-radius: 0 0 0 5px;
   background-color: $background-near-white;
@@ -72,6 +73,10 @@ header p {
   }
   .alert {
     border: 2px solid $alert-colour;
+  }
+  .error {
+    border: 2px solid $error-colour;
+    color: $error-colour;
   }
 
   ul {

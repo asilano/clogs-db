@@ -7,9 +7,27 @@ class MailShotsController < ApplicationController
   end
 
   def create
-    @list = MailingList.find_by_id(params[:mailing_list_id].to_i)
+    ok_to_send = true
 
-    if @list
+    @list = MailingList.find_by_id(params[:mailing_list_id].to_i)
+    if !@list
+      flash[:error] = "You must specify a mailing list"
+      ok_to_send = false
+    end
+
+    if params[:subject].blank?
+      flash[:error].andand << "<br/>".html_safe or flash[:error] = ''
+      flash[:error] << 'Mail shot is missing its subject'
+      ok_to_send = false
+    end
+
+    if params[:body].blank?
+      flash[:error].andand << "<br/>".html_safe or flash[:error] = ''
+      flash[:error] << 'Mail shot is missing its body'
+      ok_to_send = false
+    end
+
+    if ok_to_send
       # Queue sending mail here.
       MailShot.new(params.slice :mailing_list_id, :subject, :body).delay.send_emails
       flash[:notice] = "Emails created, and queued for delivery."
@@ -22,10 +40,8 @@ class MailShotsController < ApplicationController
         no_email_members.each { |m| flash[:notice] << "<li>#{m.fullname}</li>".html_safe }
         flash[:notice] << '</ul>'.html_safe
       end
-    else
-      flash[:error] = "You must specify a mailing list"
     end
 
-    redirect_to action: :new, mailing_list_id: 1
+    redirect_to action: :new, mailing_list_id: @list.andand.id || 1
   end
 end
