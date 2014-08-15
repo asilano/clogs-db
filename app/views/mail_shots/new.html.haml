@@ -30,5 +30,8 @@
       %span &lt;address&gt; =&gt; Full address over multiple lines
       %br
       %span &lt;mailing_list_names&gt; =&gt; The name of each mailing list the member is on, in one line with commas
+    .field
+      = label_tag :attachment_1, 'Attach a file'
+      = file_field_tag 'attachments[]', id: 'attachment_1'
   .actions
-    = submit_tag 'Send'
+    = submit_tag 'Send', disable_with: 'Sending...'

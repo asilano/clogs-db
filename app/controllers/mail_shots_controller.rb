@@ -29,7 +29,7 @@ class MailShotsController < ApplicationController
 
     if ok_to_send
       # Queue sending mail here.
-      MailShot.new(params.slice :mailing_list_id, :subject, :body).delay.send_emails
+      MailShot.new(params.slice :mailing_list_id, :subject, :body, :attachments).delay.send_emails
       flash[:notice] = "Emails created, and queued for delivery."
 
       # Report synchronously those members which we know will fail, due to having no email address

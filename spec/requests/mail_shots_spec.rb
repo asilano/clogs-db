@@ -108,6 +108,82 @@ describe 'MailShots' do
         end
       end
 
+      it "should error if body is absent" do
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: "Test subject"
+        fill_in :body, with: ''
+
+        expect { click_button 'Send' }.to_not change { Delayed::Job.count }
+        expect(page).to have_css('#flash .error', text: "Mail shot is missing its body")
+      end
+
+      it "should error if subject is absent" do
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: ''
+        fill_in :body, with: 'Test body'
+
+        expect { click_button 'Send' }.to_not change { Delayed::Job.count }
+        expect(page).to have_css('#flash .error', text: "Mail shot is missing its subject")
+      end
+
+      it "should give both errors if subject and body are absent" do
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: ''
+        fill_in :body, with: ''
+
+        expect { click_button 'Send' }.to_not change { Delayed::Job.count }
+        expect(page).to have_css('#flash .error', text: "Mail shot is missing its subject")
+        expect(page).to have_css('#flash .error', text: "Mail shot is missing its body")
+      end
+
+      it "should warn about members with no email address" do
+        @member1.email = nil
+        @member2.email = 'fake-email'
+        @member1.save
+        @member2.save
+
+        visit new_mail_shot_path(mailing_list_id: @mailing_list)
+        fill_in :subject, with: "Test email"
+        fill_in :body, with: "Hello,\n\nThis is a test email."
+        click_button "Send"
+
+        expect(page).to have_content('The following members will not be emailed, as they do not have a configured email address')
+        expect(page).to have_css('li', text: @member1.fullname)
+        expect(page).to have_css('li', text: @member2.fullname)
+      end
+
+      it "should ignore members with no email address" do
+        @member1.email = nil
+        @member2.email = "fake-emil"
+        @member1.save
+        @member2.save
+
+        visit new_mail_shot_path(mailing_list_id: @mailing_list)
+        fill_in :subject, with: "Test email"
+        fill_in :body, with: "Hello,\n\nThis is a test email."
+        click_button "Send"
+
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq @mailing_list.members.count - 2
+
+        @mailing_list.members.reject { |m| m == @member1 || m == @member2 }.zip(all_emails) do |row|
+          member = row[0]
+          email = row[1]
+          expect(email.to).to eq [member.email]
+          expect(email.subject).to eq 'Test email'
+          expect(email.body).to eq "Hello,\n\nThis is a test email."
+        end
+      end
+    end
+
+    describe 'mail-merge' do
+      before :each do
+        reset_email
+      end
+
       it "should perform simple mail-merge" do
         subject = "Test email"
         body = "Hello <forename>,\n\nThis is a test email."
@@ -212,76 +288,68 @@ EOD
           expect(email.body).to include "<test>"
         end
       end
+    end
 
-      it "should error if body is absent" do
-        visit new_mail_shot_path
-        select @sub_list.name, from: 'Mailing list'
-        fill_in :subject, with: "Test subject"
-        fill_in :body, with: ''
-
-        expect { click_button 'Send' }.to_not change { Delayed::Job.count }
-        expect(page).to have_css('#flash .error', text: "Mail shot is missing its body")
+    describe 'attachments' do
+      before :each do
+        reset_email
       end
 
-      it "should error if subject is absent" do
-        visit new_mail_shot_path
-        select @sub_list.name, from: 'Mailing list'
-        fill_in :subject, with: ''
-        fill_in :body, with: 'Test body'
+      let(:files) { %w<file1.txt file2.png file3.xml>.map { |fn| Rails.root.join("spec/data/#{fn}") } }
+      let(:badFiles) { %w<absentFile1 absentFile2>.map { |fn| Rails.root.join("spec/data/#{fn}") } }
 
-        expect { click_button 'Send' }.to_not change { Delayed::Job.count }
-        expect(page).to have_css('#flash .error', text: "Mail shot is missing its subject")
-      end
-
-      it "should give both errors if subject and body are absent" do
-        visit new_mail_shot_path
-        select @sub_list.name, from: 'Mailing list'
-        fill_in :subject, with: ''
-        fill_in :body, with: ''
-
-        expect { click_button 'Send' }.to_not change { Delayed::Job.count }
-        expect(page).to have_css('#flash .error', text: "Mail shot is missing its subject")
-        expect(page).to have_css('#flash .error', text: "Mail shot is missing its body")
-      end
-
-      it "should warn about members with no email address" do
-        @member1.email = nil
-        @member2.email = 'fake-email'
-        @member1.save
-        @member2.save
-
-        visit new_mail_shot_path(mailing_list_id: @mailing_list)
+      it "should allow a single attachment to be chosen" do
+        visit new_mail_shot_path(mailing_list_id: @sub_list)
         fill_in :subject, with: "Test email"
         fill_in :body, with: "Hello,\n\nThis is a test email."
-        click_button "Send"
+        attach_file 'Attach a file', files[0]
+        click_button 'Send'
 
-        expect(page).to have_content('The following members will not be emailed, as they do not have a configured email address')
-        expect(page).to have_css('li', text: @member1.fullname)
-        expect(page).to have_css('li', text: @member2.fullname)
+        expect(page).to have_content 'Emails created, and queued for delivery.'
       end
 
-      it "should ignore members with no email address" do
-        @member1.email = nil
-        @member2.email = "fake-emil"
-        @member1.save
-        @member2.save
+      it "should allow multiple attachements to be chosen", js: true
 
-        visit new_mail_shot_path(mailing_list_id: @mailing_list)
+      it "should include a single attachment in queued job" do
+        visit new_mail_shot_path(mailing_list_id: @sub_list)
         fill_in :subject, with: "Test email"
         fill_in :body, with: "Hello,\n\nThis is a test email."
-        click_button "Send"
+        attach_file 'Attach a file', files[0]
+
+        expect { click_button 'Send' }.to change { Delayed::Job.count }.from(0).to(1)
+        expect(Delayed::Job.first.handler.scan('!ruby/struct:MailShot::Attachment').count).to eq 1
+      end
+
+      it "should include multiple attachments in queued job", js: true
+
+      it "should send single attachment" do
+        visit new_mail_shot_path(mailing_list_id: @sub_list)
+        fill_in :subject, with: "Test email"
+        fill_in :body, with: "Hello,\n\nThis is a test email."
+        attach_file 'Attach a file', files[0]
+        click_button 'Send'
 
         expect(Delayed::Worker.new.work_off).to eq [1, 0]
-        expect(all_emails.count).to eq @mailing_list.members.count - 2
+        expect(all_emails.count).to eq @sub_list.members.count
 
-        @mailing_list.members.reject { |m| m == @member1 || m == @member2 }.zip(all_emails) do |row|
+        @sub_list.members.zip(all_emails) do |row|
           member = row[0]
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq 'Test email'
-          expect(email.body).to eq "Hello,\n\nThis is a test email."
+          expect(email.body).to include "Hello,\n\nThis is a test email."
+          expect(email.attachments).to have(1).file
+          att = email.attachments[0]
+          expect(att.filename).to eq File.basename files[0]
+          expect(att.body.decoded).to eq File.read files[0]
         end
       end
+
+      it "should send multiple attachments", js: true
+
+      it "should error if single attachment is unavailable"
+
+      it "should error on all unavailable attachments", js: true
     end
   end
 end

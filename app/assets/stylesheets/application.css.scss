@@ -12,6 +12,7 @@
  */
 @import "compass/reset";
 @import "compass/css3/box-sizing";
+@import "compass/utilities/general/clearfix";
 @import "sassybuttons";
 @import "mixins";
 @import "fonts";
@@ -194,6 +195,8 @@ fieldset {
           white-space: pre;
           margin-left: 1em;
       }
+
+      @include clearfix;
     }
   }
 
