@@ -337,7 +337,7 @@ EOD
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq 'Test email'
-          expect(email.body).to include "Hello,\n\nThis is a test email."
+          expect(email.text_part.body).to include "Hello,\n\nThis is a test email."
           expect(email.attachments).to have(1).file
           att = email.attachments[0]
           expect(att.filename).to eq File.basename files[0]
