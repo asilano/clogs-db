@@ -178,6 +178,12 @@ fieldset {
   padding-top: 0;
   margin: 5px 0;
 
+  .column {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 1em;
+  }
+
   .field {
     margin: 10px 0;
     label {

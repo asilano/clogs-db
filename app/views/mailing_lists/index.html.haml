@@ -13,7 +13,7 @@
     - @lists.each do |list|
       %tr
         %td= list.name
-        %td= icon_link('envelope', new_mail_shot_path(mailing_list_id: list)) + show_edit_delete_links(list)
+        %td= icon_link('envelope', new_mail_shot_path(mailing_list_id: list)) + show_edit_delete_links(list, "mailing list '#{list.name}'")
 
 %br
 

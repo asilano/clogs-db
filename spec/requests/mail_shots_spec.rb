@@ -230,6 +230,7 @@ describe 'MailShots' do
 <show_fee_paid>
 <concert_fee_paid>
 <mailing_list_names>
+<notes>
 EOD
         expected_body = <<EOD
 John
@@ -256,6 +257,7 @@ true
 false
 true
 Publicity, Only some members
+Married to Jane
 EOD
         visit new_mail_shot_path
         select @mailing_list.name, from: 'Mailing list'

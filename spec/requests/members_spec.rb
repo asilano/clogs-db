@@ -94,6 +94,7 @@ describe "Members" do
         expect(page).to have_css('th', text: "Forename")
         expect(page).to have_css('th', text: "Voice")
         expect(page).to have_css('th', text: "Concert paid")
+        expect(page).to have_css('th', text: "Notes")
 
         # A selection of fields for the first member
         expect(page).to have_css('td', text: @member.surname)
@@ -104,6 +105,7 @@ describe "Members" do
         expect(page).to have_css('td', text: @wife.forename)
         expect(page).to have_css('td', text: @wife.membership)
         expect(page).to have_css('td', text: @wife.email)
+        expect(page).to have_css('td', text: @wife.notes)
       end
     end
 
@@ -133,8 +135,9 @@ describe "Members" do
         @member.mailing_lists.each do |list|
           expect(page).to have_css('td a', text: list.name)
         end
+        expect(page).to have_css('td', text: @member.notes)
 
-        expect(page).to_not have_css('td', text: @wife.forename)
+        expect(page).to_not have_css('td', text: @wife.voice)
 
         visit member_path(@wife.id)
         # A selection of fields for the second member
@@ -145,7 +148,7 @@ describe "Members" do
           expect(page).to have_css('td a', text: list.name)
         end
 
-        expect(page).to_not have_css('td', text: @member.forename)
+        expect(page).to_not have_css('td', text: @member.voice)
       end
 
       it "links to each mailing list" do
@@ -175,12 +178,14 @@ describe "Members" do
         fill_in 'Surname', with: 'Roberts'
         check(@list_one.name)
         check(@list_three.name)
+        fill_in 'Notes', with: 'My uncle'
         click_button 'Save'
 
         expect(current_path).to eq member_path(max_id + 1)
         expect(Member.last.forename).to eq 'Bob'
         expect(Member.last.mailing_lists.map(&:name)).to match_array [@list_one.name, @list_three.name]
         expect(page).to have_content('Roberts')
+        expect(page).to have_content('My uncle')
         expect(page).to have_content(@list_three.name)
         expect(page).to_not have_content(@list_two.name)
       end
