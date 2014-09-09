@@ -99,7 +99,7 @@ describe "Members" do
         # A selection of fields for the first member
         expect(page).to have_css('td', text: @member.surname)
         expect(page).to have_css('td', text: @member.membership)
-        expect(page).to have_css('td', text: @member.mobile)
+        expect(page).to have_css('td', text: @member.formatted_mobile.sub('&nbsp;', ' '))
 
         # A selection of fields for the second member
         expect(page).to have_css('td', text: @wife.forename)

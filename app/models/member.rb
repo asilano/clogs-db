@@ -14,6 +14,14 @@ class Member < ActiveRecord::Base
     [addr1, addr2, addr3, town, county, postcode].reject(&:blank?).join("\n")
   end
 
+  def formatted_phone
+    UKPhoneNumbers.format(phone.andand.gsub(/\s/, '')).andand.gsub(/\s/, '&nbsp;') || ''
+  end
+
+  def formatted_mobile
+    UKPhoneNumbers.format(mobile.andand.gsub(/\s/, '')).andand.gsub(/\s/, '&nbsp;') || ''
+  end
+
   def mailing_list_names
     mailing_lists.map(&:name).join(', ')
   end

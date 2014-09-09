@@ -10,14 +10,8 @@
       %th.sortcol Forename
       %th.sortcol.sortfirstasc Surname
       %th.nosort Notes
-      %th.sortcol Addr1
-      %th.sortcol Addr2
-      %th.sortcol Addr3
-      %th.sortcol Town
-      %th.sortcol County
-      %th.sortcol Postcode
+      %th.sortcol Address
       %th.sortcol.text Phone
-      %th.sortcol.text Mobile
       %th.sortcol Voice
       %th.sortcol Membership
       %th.sortcol Email
@@ -32,14 +26,11 @@
         %td= member.forename
         %td= member.surname
         %td= member.notes
-        %td= member.addr1
-        %td= member.addr2
-        %td= member.addr3
-        %td= member.town
-        %td= member.county
-        %td= member.postcode
-        %td= member.phone
-        %td= member.mobile
+        %td= transform_newlines member.address
+        %td
+          = raw member.formatted_phone
+          %br
+          = raw member.formatted_mobile
         %td= member.voice
         %td= member.membership
         %td= member.email

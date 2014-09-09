@@ -84,6 +84,9 @@ gem 'squeel'
 gem "delayed_job_active_record"
 gem "workless", "~> 1.1.3", :group => :production
 
+# To display phone numbers correctly
+gem 'uk_phone_numbers'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

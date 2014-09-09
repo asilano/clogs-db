@@ -21,4 +21,8 @@ module ApplicationHelper
     label + checkbox + controlled_div
   end
 
+  def transform_newlines(str)
+    raw str.gsub("\n", '<br/>')
+  end
+
 end
