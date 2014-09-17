@@ -3,3 +3,6 @@
 - %w<members mailing_lists>.each do |controller|
   .tab{:class => (controller == current  && action == 'index') ? 'current' : '' }
     = link_to controller.humanize, controller: controller
+
+.tab{:class => (current == 'mail_shots' && action == 'new') ? 'current' : '' }
+  = link_to 'Mail Shot', new_mail_shot_path

@@ -51,6 +51,7 @@ describe 'MailShots' do
         expect(page).to have_select :mailing_list_id
         expect(page).to have_field :subject
         expect(page).to have_field :body
+        expect(page).to have_css('.tab.current a', text: 'Mail Shot')
       end
 
       it "should be accessible via Mailing List index" do
@@ -59,6 +60,7 @@ describe 'MailShots' do
         expect(page).to have_select(:mailing_list_id, selected: MailingList.first.name)
         expect(page).to have_field :subject
         expect(page).to have_field :body
+        expect(page).to have_css('.tab.current a', text: 'Mail Shot')
       end
 
       it "should be accessible via Mailing List show page" do
@@ -67,8 +69,18 @@ describe 'MailShots' do
         expect(page).to have_select(:mailing_list_id, selected: @sub_list.name)
         expect(page).to have_field :subject
         expect(page).to have_field :body
+        expect(page).to have_css('.tab.current a', text: 'Mail Shot')
       end
 
+      it "should be accessible via tabbed navigation" do
+        visit root_path
+        expect(page).to have_css('.tab a', text: 'Mail Shot')
+        click_link 'Mail Shot'
+        expect(page).to have_select :mailing_list_id
+        expect(page).to have_field :subject
+        expect(page).to have_field :body
+        expect(page).to have_css('.tab.current a', text: 'Mail Shot')
+      end
     end
 
     describe "create mail shot" do

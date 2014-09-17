@@ -86,7 +86,6 @@ class MembersController < ApplicationController
     @member.save!
 
     @toggled_id = "#{params[:fee]}-#{params[:id]}"
-    Rails.logger.info("looking for #{@toggled_path}")
     respond_to do |format|
       format.html { redirect_to action: 'index' }
       format.js
