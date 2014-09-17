@@ -1,0 +1,4 @@
+<%- if @member %>
+  $("#<%= @toggled_id %>").find("span.icon-cross, span.icon-checkmark")
+      .toggleClass('icon-cross icon-checkmark');
+<%- end %>

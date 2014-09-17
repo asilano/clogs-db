@@ -7,7 +7,9 @@ ClogsDb::Application.routes.draw do
     delete 'users/:id', to: 'users/registrations#destroy_other', as: 'destroy_other_user'
   end
 
-  resources :members
+  resources :members do
+    put 'toggle_paid/:fee', on: :member, constraints: {fee: /subs|show|concert/}, action: 'toggle_paid', as: 'toggle_paid'
+  end
   resources :mailing_lists
 
 

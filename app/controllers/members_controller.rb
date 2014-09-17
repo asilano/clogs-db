@@ -73,6 +73,26 @@ class MembersController < ApplicationController
     end
   end
 
+  def toggle_paid
+    @member = Member.find params[:id]
+    case params[:fee]
+    when 'subs'
+      @member.subs_paid = !@member.subs_paid
+    when 'show'
+      @member.show_fee_paid = !@member.show_fee_paid
+    when 'concert'
+      @member.concert_fee_paid = !@member.concert_fee_paid
+    end
+    @member.save!
+
+    @toggled_id = "#{params[:fee]}-#{params[:id]}"
+    Rails.logger.info("looking for #{@toggled_path}")
+    respond_to do |format|
+      format.html { redirect_to action: 'index' }
+      format.js
+    end
+  end
+
   # DELETE /members/1
   # DELETE /members/1.json
   def destroy
