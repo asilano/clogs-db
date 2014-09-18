@@ -316,31 +316,35 @@ EOD
         visit new_mail_shot_path(mailing_list_id: @sub_list)
         fill_in :subject, with: "Test email"
         fill_in :body, with: "Hello,\n\nThis is a test email."
-        attach_file 'Attach a file', files[0]
+        attach_file 'Attach files', files[0]
         click_button 'Send'
 
         expect(page).to have_content 'Emails created, and queued for delivery.'
       end
 
-      it "should allow multiple attachements to be chosen", js: true
+      it "should allow multiple attachements to be chosen" do
+        pending 'Capybara support for multiple uploads'
+      end
 
       it "should include a single attachment in queued job" do
         visit new_mail_shot_path(mailing_list_id: @sub_list)
         fill_in :subject, with: "Test email"
         fill_in :body, with: "Hello,\n\nThis is a test email."
-        attach_file 'Attach a file', files[0]
+        attach_file 'Attach files', files[0]
 
         expect { click_button 'Send' }.to change { Delayed::Job.count }.from(0).to(1)
         expect(Delayed::Job.first.handler.scan('!ruby/struct:MailShot::Attachment').count).to eq 1
       end
 
-      it "should include multiple attachments in queued job", js: true
+      it "should include multiple attachments in queued job" do
+        pending 'Capybara support for multiple uploads'
+      end
 
       it "should send single attachment" do
         visit new_mail_shot_path(mailing_list_id: @sub_list)
         fill_in :subject, with: "Test email"
         fill_in :body, with: "Hello,\n\nThis is a test email."
-        attach_file 'Attach a file', files[0]
+        attach_file 'Attach files', files[0]
         click_button 'Send'
 
         expect(Delayed::Worker.new.work_off).to eq [1, 0]
@@ -359,11 +363,15 @@ EOD
         end
       end
 
-      it "should send multiple attachments", js: true
+      it "should send multiple attachments" do
+        pending 'Capybara support for multiple uploads'
+      end
 
       it "should error if single attachment is unavailable"
 
-      it "should error on all unavailable attachments", js: true
+      it "should error on all unavailable attachments" do
+        pending 'Capybara support for multiple uploads'
+      end
     end
   end
 end

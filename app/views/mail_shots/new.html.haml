@@ -31,7 +31,7 @@
       %br
       %span &lt;mailing_list_names&gt; =&gt; The name of each mailing list the member is on, in one line with commas
     .field
-      = label_tag :attachment_1, 'Attach a file'
-      = file_field_tag 'attachments[]', id: 'attachment_1'
+      = label_tag :attachments, 'Attach files'
+      = file_field_tag 'attachments[]', multiple: true, id: 'attachments'
   .actions
     = submit_tag 'Send', disable_with: 'Sending...'
