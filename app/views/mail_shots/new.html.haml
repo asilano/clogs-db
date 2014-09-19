@@ -33,6 +33,6 @@
     .field.with-descr
       = label_tag :attachments, 'Attach files'
       = file_field_tag 'attachments[]', multiple: true, id: 'attachments'
-      %span On most browsers, you can select multiple files to send as attachments
+      %span On most browsers, you can select multiple files (from the same folder) to send as attachments
   .actions
     = submit_tag 'Send', disable_with: 'Sending...'
