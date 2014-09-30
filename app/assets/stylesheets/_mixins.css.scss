@@ -6,9 +6,10 @@ $error-colour: #b50000;
 $ok-colour: #00b500;
 
 $error-bg-colour: lighten($error-colour, 50%);
-$error-colour: #b50000;
 $notice-colour: #005dff;
 $alert-colour: #eac300;
+
+$danger-colour: $error-colour;
 
 $icon-grey: #888;
 $icon-black: #444;
@@ -21,3 +22,10 @@ $icon-black: #444;
   clear: both;
   height: 0;
   }
+
+@mixin query-button($colour) {
+  @include sassy-button-gradient('simple', $colour, $colour);
+  font-weight: bold;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}

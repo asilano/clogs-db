@@ -23,6 +23,25 @@ class Member < ActiveRecord::Base
   end
 
   def mailing_list_names
-    mailing_lists.map(&:name).join(', ')
+    mailing_lists.map(&:name).sort.join(', ')
+  end
+
+  # Search pseudo-fields
+  ransacker :full_name do |parent|
+    Arel::Nodes::NamedFunction.new('concat_ws',
+      [' ', parent.table[:forename], parent.table[:surname]])
+  end
+
+  ransacker :address do |parent|
+    Arel::Nodes::NamedFunction.new('concat_ws', [', ', *([:addr1, :addr2, :addr3, :town, :county, :postcode].map { |col| parent.table[col] })])
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    all = super - ['id', 'created_at', 'updated_at']
+    all.delete 'full_name'
+    all.delete 'address'
+
+    all.insert(all.index('forename'), 'full_name')
+    all.insert(all.index('addr1'), 'address')
   end
 end

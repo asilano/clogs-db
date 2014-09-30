@@ -19,8 +19,6 @@ gem 'pg'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'modernizr-rails'
 
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer'
 
   gem 'uglifier', '>= 1.0.3'
 #end
@@ -79,6 +77,9 @@ gem 'devise'
 
 # Squeel - simpler SQL queries through AREL
 gem 'squeel'
+
+# Ransack - complex search forms
+gem 'ransack'
 
 # Delayed job and manager for its workers
 gem "delayed_job_active_record"

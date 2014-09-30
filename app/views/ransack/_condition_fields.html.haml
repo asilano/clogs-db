@@ -1,0 +1,8 @@
+- hide ||= false
+%fieldset{'data-object-name' => f.object_name, class: "fields condition #{'hidden' if hide}"}
+  = button_to_remove_fields f, :condition
+  = f.attribute_fields do |af|
+    = af.attribute_select({prompt: 'Select a field', include_blank: false}, class: 'attrib-select')
+  = f.predicate_select({only: %w<eq not_eq cont not_cont>, compounds: false}, class: 'pred-select')
+  = f.value_fields do |vf|
+    = vf.text_field :value, class: 'value-text'

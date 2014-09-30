@@ -1,0 +1,10 @@
+- prevent_removal ||= false
+%fieldset.fields.group{'data-object-name' => f.object_name}
+  %legend #{f.combinator_select({}, class: 'combinator-select')} of the following are true: #{button_to_remove_fields(f, :group) unless prevent_removal}
+  = f.condition_fields do |c|
+    = render 'ransack/condition_fields', f: c
+  = button_to_add_fields '+ <?>', f, :condition
+
+  = f.grouping_fields do |g|
+    = render 'ransack/grouping_fields', f: g
+  = button_to_nest_fields '+ {', :grouping

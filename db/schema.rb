@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140904080317) do
+ActiveRecord::Schema.define(:version => 20140929183641) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0, :null => false
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(:version => 20140904080317) do
     t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.text     "query"
   end
 
   add_index "mailing_lists", ["name"], :name => "index_mailing_lists_on_name", :unique => true

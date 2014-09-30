@@ -24,5 +24,4 @@ module ApplicationHelper
   def transform_newlines(str)
     raw str.gsub("\n", '<br/>')
   end
-
 end

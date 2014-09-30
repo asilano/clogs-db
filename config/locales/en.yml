@@ -2,4 +2,12 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  ransack:
+    all: 'All'
+    any: 'Any'
+  activerecord:
+    attributes:
+      member:
+        addr1: "Address - line 1"
+        addr2: "Address - line 2"
+        addr3: "Address - line 3"

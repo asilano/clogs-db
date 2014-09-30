@@ -120,6 +120,10 @@ describe 'MailShots' do
         end
       end
 
+      it "should resolve the mailing list's dynamic query" do
+        fail "write this test before commit"
+      end
+
       it "should error if body is absent" do
         visit new_mail_shot_path
         select @sub_list.name, from: 'Mailing list'
@@ -268,7 +272,7 @@ j.smith@example.com
 true
 false
 true
-Publicity, Only some members
+Only some members, Publicity
 Married to Jane
 EOD
         visit new_mail_shot_path

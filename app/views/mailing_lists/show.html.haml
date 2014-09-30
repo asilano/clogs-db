@@ -7,12 +7,15 @@
     %th Name:
     %td= @list.name
   %tr
-    %th Members:
+    %th Fixed members:
     %td
       = check_box_hack pluralize(@list.members.count, 'member') + " (of #{Member.count} total)", "members_list" do
         - @list.members.name_order.each do |member|
           = link_to(member.fullname, member_path(member))
           %br
+  %tr
+    %th Varying members:
+    %td= display_query @list.query
 %div
   = icon_link 'envelope', new_mail_shot_path(@list)
   = link_to 'Email this list', new_mail_shot_path(@list)

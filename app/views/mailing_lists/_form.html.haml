@@ -11,11 +11,46 @@
     .field
       = f.label :name
       = f.text_field :name
-    .field.with-descr
+    .field
       = f.label :member_ids, 'Members'
-      = f.collection_select :member_ids, Member.name_order, :id, :fullname, {include_blank: 'None'}, multiple: true, size: [25, Member.count].min
-      %span Hold &lt;Ctrl&gt; to select/deselect multiple members.
-      %br
-      %span Hold &lt;Shift&gt; to select/deselect a range of members.
+      .column
+        %fieldset
+          .head These members will be included in mail shots regardless of any query
+          .descr
+            Hold &lt;Ctrl&gt; to select/deselect multiple members.
+            %br
+            Hold &lt;Shift&gt; to select/deselect a range of members.
+          = f.collection_select :member_ids, Member.name_order, :id, :fullname, {include_blank: 'None'}, multiple: true, size: [25, Member.count].min
+      .column
+        %fieldset
+          .head The query below will determine which members to include when a mail shot is created
+          .nojs-section
+            Javascript is needed to define a query
+          .js-section
+            %div{:class => "query-form #{@query_present ? 'hidden' : ''}"}
+              No query defined
+              = hidden_field_tag 'suppress_query_form', true, disabled: @query_present, class: 'suppress'
+              %div
+                %button.toggle-query Define query
+            %div{:class => "query-form #{@query_present ? '' : 'hidden'}"}
+              %button.toggle-query.danger Remove query
+              %div Mailing list should contain all contacts where:
+              - @search ||= Member.search
+              - @search.build_grouping unless @search.g.any?
+              = f.search_fields_for 'query', @search do |s|
+                - setup_search_form s
+                = s.grouping_fields do |gf|
+                  = render 'ransack/grouping_fields', f: gf, prevent_removal: true
   .actions
     = f.submit 'Save'
+
+
+- content_for :document_ready do
+  :plain
+    $('.toggle-query').click(function()
+    {
+      $('.query-form').toggle('hidden');
+      el = $('.query-form .suppress');
+      el.prop('disabled', !el.prop('disabled'));
+      return false;
+    });

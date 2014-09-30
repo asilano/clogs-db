@@ -6,7 +6,11 @@
     = javascript_include_tag "application"
     :javascript
       document.documentElement.className = "js";
-      $(function(){$('.nojs-section').remove()});
+      $(function()
+      {
+        $('.nojs-section').remove();
+        #{content_for :document_ready};
+      });
     = csrf_meta_tags
 
   %body

@@ -62,4 +62,7 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
+
 end
+
+Capybara.asset_host = "http://localhost:3000"

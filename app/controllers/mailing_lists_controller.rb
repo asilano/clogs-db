@@ -28,6 +28,7 @@ class MailingListsController < ApplicationController
   # GET /mailing_lists/new.json
   def new
     @list = MailingList.new
+    @query_present = false
 
     respond_to do |format|
       format.html # new.html.erb
@@ -38,11 +39,14 @@ class MailingListsController < ApplicationController
   # GET /mailing_lists/1/edit
   def edit
     @list = MailingList.find(params[:id])
+    @search = Member.search(@list.query)
+    @query_present = @list.query.present?
   end
 
   # POST /mailing_lists
   # POST /mailing_lists.json
   def create
+    params[:mailing_list].delete(:query) if params[:suppress_query_form]
     @list = MailingList.new(params[:mailing_list])
 
     respond_to do |format|

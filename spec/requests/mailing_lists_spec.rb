@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "MailingLists" do
-  describe "while logged out" do
+  describe "(while logged out)" do
     describe "GET /mailing_lists" do
       it "redirects to login path" do
         get mailing_lists_path
@@ -63,7 +63,7 @@ describe "MailingLists" do
     end
   end
 
-  describe "while logged in" do
+  describe "(while logged in)" do
     let(:user) { FactoryGirl.create(:user) }
     before(:each) do
       visit new_user_session_path
@@ -76,6 +76,8 @@ describe "MailingLists" do
       @mailing_list = FactoryGirl.create(:mailing_list)
       @sub_list = FactoryGirl.create(:small_mailing_list)
       @empty_list = FactoryGirl.create(:mailing_list, name: 'Empty List')
+      @simple_dynamic_list = FactoryGirl.create(:simple_dynamic_list)
+      @complex_dynamic_list = FactoryGirl.create(:complex_dynamic_list)
 
       @member1 = FactoryGirl.create(:member, forename: 'John', surname: 'Smith')
       @member2 = FactoryGirl.create(:member, forename: 'Jane', surname: 'Doe')
@@ -101,6 +103,7 @@ describe "MailingLists" do
 
         # A selection of headings
         expect(page).to have_css('th', text: "Name")
+        expect(page).to have_css('th', text: "Dynamic?")
         expect(page).to have_css('td', text: @mailing_list.name)
         expect(page).to have_css('td', text: @sub_list.name)
       end
@@ -120,6 +123,8 @@ describe "MailingLists" do
         # A selection of headings
         expect(page).to have_css('th', text: "Name")
         expect(page).to have_css('td', text: @mailing_list.name)
+        expect(page).to have_css('th', text: "Fixed members")
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text: 'No query')
         expect(page).to_not have_css('td', text: @sub_list.name)
 
         visit mailing_list_path(@sub_list.id)
@@ -129,7 +134,7 @@ describe "MailingLists" do
 
       it "displays a count of members" do
         visit mailing_list_path(@mailing_list)
-        expect(page).to have_css('th', text: 'Members')
+        expect(page).to have_css('th', text: 'Fixed members')
         expect(page).to have_css('td', text: pluralize(@mailing_list.members.count, 'member') + " (of #{Member.count} total)")
       end
 
@@ -143,10 +148,25 @@ describe "MailingLists" do
         expect(page).to have_content(@mailing_list.members.last.surname)
       end
 
+      it "displays interpreted dynamic query, if it exists" do
+        # Query for simple dynamic list
+        visit mailing_list_path(@simple_dynamic_list)
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text: "<forename or email> CONTAINS 'ian'")
+
+        # Query for complex dynamic list
+        visit mailing_list_path(@complex_dynamic_list)
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text: "<membership> EQUALS 'Life Patron' OR (<membership> EQUALS 'Patron' AND <subs_paid> EQUALS 'true'")
+      end
+
+      it "displays current matching members for dynamic query" do
+        fail "write this test before commit"
+        # Test list with fixed and dynamic members
+      end
+
       describe "with js", js: true do
         it "allows expansion of members list" do
           visit mailing_list_path(@mailing_list)
-          fullname = @mailing_list.members.first.forename + " " + @mailing_list.members.first.surname
+          fullname = @mailing_list.members.first.fullname
           expect(page).to_not have_css('a', text: fullname, visible: true)
 
           page.first('label', text: pluralize(@mailing_list.members.count, 'member')).click
@@ -186,6 +206,145 @@ describe "MailingLists" do
         page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
         click_button 'Save'
         expect(MailingList.last.members).to match_array [@member1, @member2]
+      end
+
+      it "allows definition of dynamic query", js: true do
+        visit new_mailing_list_path
+        fill_in 'Name', with: "Defining query"
+
+        expect(page).to have_content 'No query defined'
+        click_button 'Define query'
+        sleep 0.5
+        expect(page).to_not have_content 'No query defined'
+
+        # Set up the following query:
+        # (<forename> EQUALS 'ian' OR
+        #  ((<address> CONTAINS 'Chippenham' AND <surname> DOES NOT EQUAL 'Smith' AND <show_fee_paid> EQUALS 'true') OR
+        #    <phone> DOES NOT CONTAIN '01225'))
+        page.first('select.combinator-select option', text: 'Any').select_option
+        expect(page).to_not have_css 'select.attrib-select'
+        page.first('button', text: '+ <?>').click
+        sleep 0.5
+        page.first('select.attrib-select option', text: 'Postcode').select_option
+        page.first('select.pred-select option', text: 'equals').select_option
+        page.first('input.value-text').set 'AA0 0AA'
+
+        # Remove and re-add a condition
+        page.first('button.remove-condition').click
+        sleep 0.5
+
+        expect(page).to_not have_css 'select.attrib-select'
+        page.first('button', text: '+ <?>').click
+        sleep 0.5
+        page.first('select.attrib-select option', text: 'Forename').select_option
+        page.first('select.pred-select option', text: 'equals').select_option
+        page.first('input.value-text').set 'ian'
+
+        page.first('button', text: '+ {').click
+        sleep 0.5
+        page.all('select.combinator-select')[1].find('option', text: 'Any').select_option
+        page.all('button', text: '+ <?>')[1].click
+        sleep 0.5
+        page.all('select.attrib-select option', text: 'Mobile')[1].select_option
+        page.all('select.pred-select option', text: 'equals')[1].select_option
+        page.all('input.value-text')[1].set '01234 567890'
+
+        # Remove and re-add a group
+        page.first('button.remove-group').click
+        sleep 0.5
+
+        page.first('button', text: '+ {').click
+        sleep 0.5
+        page.all('select.combinator-select')[1].find('option', text: 'Any').select_option
+        page.all('button', text: '+ <?>')[1].click
+        sleep 0.5
+        page.all('select.attrib-select option', text: 'Phone')[1].select_option
+        page.all('select.pred-select option', text: "doesn't contain")[1].select_option
+        page.all('input.value-text')[1].set '01225'
+
+        # Add-group buttons appear just before the group's closing brace. So we want the first one.
+        page.all('button', text: '+ {')[0].click
+        sleep 0.5
+        page.all('select.combinator-select')[2].find('option', text: 'All').select_option
+        page.all('button', text: '+ <?>')[2].click
+        sleep 0.5
+        page.all('select.attrib-select')[2].first('option', text: /^Address$/).select_option
+        page.all('select.pred-select option', text: 'contains')[2].select_option
+        page.all('input.value-text')[2].set 'Chippenham'
+
+        page.all('button', text: '+ <?>')[2].click
+        sleep 0.5
+        page.all('select.attrib-select option', text: 'Surname')[3].select_option
+        page.all('select.pred-select option', text: 'not equal to')[3].select_option
+        page.all('input.value-text')[3].set 'Smith'
+
+
+        page.all('button', text: '+ <?>')[2].click
+        sleep 0.5
+        page.all('select.attrib-select option', text: 'Show fee paid')[4].select_option
+        page.all('select.pred-select option', text: 'equals')[4].select_option
+        page.all('input.value-text')[4].set 'true'
+
+        click_button 'Save'
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text:
+"<forename> EQUALS 'ian' OR (<phone> DOESN'T CONTAIN '01225' OR (<address> CONTAINS 'Chippenham' AND <surname> NOT EQUAL TO 'Smith' AND <show_fee_paid> EQUALS 'true'))"
+        )
+        expect(MailingList.last.members).to be_empty
+      end
+
+      it "allows dynamic query and selected members", js: true do
+        visit new_mailing_list_path
+        fill_in 'Name', with: "Defining query plus members"
+
+        expect(page).to have_content 'No query'
+        click_button 'Define query'
+        sleep 0.5
+        expect(page).to_not have_content 'No query'
+
+        # Set up a simple dynamic query
+        page.first('select.combinator-select option', text: 'Any').select_option
+        expect(page).to_not have_css 'select.attrib-select'
+        page.first('button', text: '+ <?>').click
+        sleep 0.5
+        page.first('select.attrib-select option', text: 'Postcode').select_option
+        page.first('select.pred-select option', text: 'equals').select_option
+        page.first('input.value-text').set 'AA0 0AA'
+
+        # Select some members
+        page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
+        page.select "#{@member3.forename} #{@member3.surname}", from: 'Members'
+        click_button 'Save'
+        expect(MailingList.last.members).to match_array [@member2, @member3]
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text: "<postcode> EQUALS 'AA0 0AA'")
+      end
+
+      it "ignores a hidden dynamic query", js: true do
+        visit new_mailing_list_path
+        fill_in 'Name', with: "Defining then hiding query"
+
+        expect(page).to have_content 'No query'
+        click_button 'Define query'
+        sleep 0.5
+        expect(page).to_not have_content 'No query'
+
+        # Set up a simple dynamic query
+        page.first('select.combinator-select option', text: 'Any').select_option
+        expect(page).to_not have_css 'select.attrib-select'
+        page.first('button', text: '+ <?>').click
+        sleep 0.5
+        page.first('select.attrib-select option', text: 'Postcode').select_option
+        page.first('select.pred-select option', text: 'equals').select_option
+        page.first('input.value-text').set 'AA0 0AA'
+
+        # Now hide it
+        click_button 'Remove query'
+
+        # Select some members
+        page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
+        page.select "#{@member3.forename} #{@member3.surname}", from: 'Members'
+        click_button 'Save'
+        expect(MailingList.last.members).to match_array [@member2, @member3]
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text: 'No query')
       end
 
       describe "redisplays the create form with invalid params" do
@@ -248,6 +407,120 @@ describe "MailingLists" do
         page.unselect "#{@member3.forename} #{@member3.surname}", from: 'Members'
         click_button 'Save'
         expect(MailingList.find(@sub_list).members).to be_empty
+      end
+
+      it "allows definition of dynamic query", js: true do
+        visit edit_mailing_list_path(@sub_list)
+        fill_in 'Name', with: "Defining query"
+
+        expect(page).to have_content 'No query defined'
+        click_button 'Define query'
+        sleep 0.5
+        expect(page).to_not have_content 'No query defined'
+
+        # Set up the following query:
+        # (<forename> EQUALS 'ian' OR
+        #  ((<address> CONTAINS 'Chippenham' AND <surname> DOES NOT EQUAL 'Smith' AND <show_fee_paid> EQUALS 'true') OR
+        #    <phone> DOES NOT CONTAIN '01225'))
+        page.first('select.combinator-select option', text: 'Any').select_option
+        expect(page).to_not have_css 'select.attrib-select'
+        page.first('button', text: '+ <?>').click
+        sleep 0.5
+        page.first('select.attrib-select option', text: 'Postcode').select_option
+        page.first('select.pred-select option', text: 'equals').select_option
+        page.first('input.value-text').set 'AA0 0AA'
+
+        # Remove and re-add a condition
+        page.first('button.remove-condition').click
+        sleep 0.5
+
+        expect(page).to_not have_css 'select.attrib-select'
+        page.first('button', text: '+ <?>').click
+        sleep 0.5
+        page.first('select.attrib-select option', text: 'Forename').select_option
+        page.first('select.pred-select option', text: 'equals').select_option
+        page.first('input.value-text').set 'ian'
+
+        page.first('button', text: '+ {').click
+        sleep 0.5
+        page.all('select.combinator-select')[1].find('option', text: 'Any').select_option
+        page.all('button', text: '+ <?>')[1].click
+        sleep 0.5
+        page.all('select.attrib-select option', text: 'Mobile')[1].select_option
+        page.all('select.pred-select option', text: 'equals')[1].select_option
+        page.all('input.value-text')[1].set '01234 567890'
+
+        # Remove and re-add a group
+        page.first('button.remove-group').click
+        sleep 0.5
+
+        page.first('button', text: '+ {').click
+        sleep 0.5
+        page.all('select.combinator-select')[1].find('option', text: 'Any').select_option
+        page.all('button', text: '+ <?>')[1].click
+        sleep 0.5
+        page.all('select.attrib-select option', text: 'Phone')[1].select_option
+        page.all('select.pred-select option', text: "doesn't contain")[1].select_option
+        page.all('input.value-text')[1].set '01225'
+
+        # Add-group buttons appear just before the group's closing brace. So we want the first one.
+        page.all('button', text: '+ {')[0].click
+        sleep 0.5
+        page.all('select.combinator-select')[2].find('option', text: 'All').select_option
+        page.all('button', text: '+ <?>')[2].click
+        sleep 0.5
+        page.all('select.attrib-select')[2].first('option', text: /^Address$/).select_option
+        page.all('select.pred-select option', text: 'contains')[2].select_option
+        page.all('input.value-text')[2].set 'Chippenham'
+
+        page.all('button', text: '+ <?>')[2].click
+        sleep 0.5
+        page.all('select.attrib-select option', text: 'Surname')[3].select_option
+        page.all('select.pred-select option', text: 'not equal to')[3].select_option
+        page.all('input.value-text')[3].set 'Smith'
+
+
+        page.all('button', text: '+ <?>')[2].click
+        sleep 0.5
+        page.all('select.attrib-select option', text: 'Show fee paid')[4].select_option
+        page.all('select.pred-select option', text: 'equals')[4].select_option
+        page.all('input.value-text')[4].set 'true'
+
+        click_button 'Save'
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text:
+"<forename> EQUALS 'ian' OR (<phone> DOESN'T CONTAIN '01225' OR (<address> CONTAINS 'Chippenham' AND <surname> NOT EQUAL TO 'Smith' AND <show_fee_paid> EQUALS 'true'))"
+        )
+        expect(MailingList.last.members).to be_empty
+      end
+
+      it "allows dynamic query and selected members", js: true do
+        visit mailing_list_path(@simple_dynamic_list)
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text: "<forename or email> CONTAINS 'ian'")
+
+        click_link 'Edit'
+
+        expect(page).to_not have_content 'No query defined'
+
+        # Set up a simple dynamic query
+        page.first('select.combinator-select option', text: 'Any').select_option
+        expect(page).to_not have_css 'select.attrib-select'
+        page.first('button', text: '+ <?>').click
+        sleep 0.5
+        page.first('select.attrib-select option', text: 'Postcode').select_option
+        page.first('select.pred-select option', text: 'equals').select_option
+        page.first('input.value-text').set 'AA0 0AA'
+
+        # Select some members
+        page.unselect "#{@member1.forename} #{@member1.surname}", from: 'Members'
+        page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
+        page.select "#{@member3.forename} #{@member3.surname}", from: 'Members'
+        click_button 'Save'
+        expect(MailingList.last.members).to match_array [@member2, @member3]
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text: "<postcode> EQUALS 'AA0 0AA'")
+      end
+
+      it "ignores a hidden dynamic query", js: true do
+        fail "write this test before commit"
       end
 
       describe "redisplays the edit form with invalid params" do

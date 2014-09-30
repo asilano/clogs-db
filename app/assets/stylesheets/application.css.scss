@@ -153,6 +153,17 @@ h1, h2, h3, h4, h5, h6 {
 
 button, input[type=button], input[type=submit], a.button {
   @include sassy-button;
+  &.danger {
+    @include sassy-button-gradient('matte', $danger-colour);
+  }
+
+  &.add-fields, &.nest-fields {
+    display: block;
+    @include query-button($ok-colour);
+  }
+  &.remove-fields {
+    @include query-button($danger-colour);
+  }
 }
 
 #error_explanation {
@@ -177,6 +188,24 @@ fieldset {
   padding: 10px;
   padding-top: 0;
   margin: 5px 0;
+
+  // Styles for a Ransack group
+  &.group {
+    border: 0;
+    border-left: 2px solid black;
+    border-radius: 10px/5px;
+
+    padding-top: 1em;
+    legend {
+      position: relative;
+      top: 1em;
+    }
+  }
+
+  // Styles for a Ransack condition
+  &.condition {
+    border: 0;
+  }
 
   .column {
     display: inline-block;
@@ -245,4 +274,12 @@ thead {
 
 h1 {
   font-size: 1.5em;
+}
+
+.head {
+  font-weight: bold;
+}
+
+.descr {
+  padding-left: 1em;
 }
