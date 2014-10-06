@@ -15,11 +15,11 @@ class Member < ActiveRecord::Base
   end
 
   def formatted_phone
-    UKPhoneNumbers.format(phone.andand.gsub(/\s/, '')).andand.gsub(/\s/, '&nbsp;') || ''
+    UKPhoneNumbers.format(phone.andand.gsub(/\s/, '')).andand.gsub(/\s/, '&nbsp;') || phone
   end
 
   def formatted_mobile
-    UKPhoneNumbers.format(mobile.andand.gsub(/\s/, '')).andand.gsub(/\s/, '&nbsp;') || ''
+    UKPhoneNumbers.format(mobile.andand.gsub(/\s/, '')).andand.gsub(/\s/, '&nbsp;') || mobile
   end
 
   def mailing_list_names
