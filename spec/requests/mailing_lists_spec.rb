@@ -159,8 +159,74 @@ describe "MailingLists" do
       end
 
       it "displays current matching members for dynamic query" do
-        fail "write this test before commit"
+        # We'll need a number of Members for this test, with varying information that matches - or not - the
+        # defined queries. We'll be working with "<forename or email> CONTAINS 'ian'" and
+        # "<membership> EQUALS 'Life Patron' OR (<membership> EQUALS 'Patron' AND <subs_paid> EQUALS 'true'"
+        members = [
+          {forename: 'Ian', surname: 'Rankin'},
+          {forename: 'John', surname: 'Smith', email: 'js.ians.mate@example.com'},
+          {forename: 'Bob', surname: 'Roberts', membership: 'Patron', subs_paid: true},
+          {forename: 'Jane', surname: 'Ian', email:'jane@example.com'},
+          {forename: 'Brian', surname: 'Cox', membership: 'Life Patron'},
+          {forename: 'Ian', surname: 'Duncan-Smith', email: 'iands@example.com'},
+          {forename: 'Ernie', surname: 'Wise', membership: 'Patron', subs_paid: false},
+          {forename: 'Julianos', surname: 'the Wise'}
+        ]
+        Member.destroy_all
+        members.each { |member| Member.create member }
+        expect(Member.count).to eq members.size
+
+        # Check we match all the Ians in forename and email. Expect case insensitivity
+        visit mailing_list_path @simple_dynamic_list
+        matching = ['Ian Rankin', 'John Smith', 'Brian Cox', 'Ian Duncan-Smith', 'Julianos the Wise']
+        matching.each do |name|
+          expect(page.find 'tr', text: 'Varying members').to have_content name
+        end
+
+        mismatching = members.map { |m| "#{m[:forename]} #{m[:surname]}" } - matching
+        mismatching.each do |name|
+          expect(page.find 'tr', text: 'Varying members').to_not have_content name
+        end
+
+        # Now check we match the patrons
+        visit mailing_list_path @complex_dynamic_list
+        matching = ['Bob Roberts', 'Brian Cox']
+        matching.each do |name|
+          expect(page.find 'tr', text: 'Varying members').to have_content name
+        end
+
+        mismatching = members.map { |m| "#{m[:forename]} #{m[:surname]}" } - matching
+        mismatching.each do |name|
+          expect(page.find 'tr', text: 'Varying members').to_not have_content name
+        end
+
         # Test list with fixed and dynamic members
+        @simple_dynamic_list.members = Member.where { surname.like_any ['Rankin', 'Roberts', '%Wise'] }
+        @simple_dynamic_list.save
+
+        visit mailing_list_path @simple_dynamic_list
+
+        # ...Varying members
+        matching = ['Ian Rankin', 'John Smith', 'Brian Cox', 'Ian Duncan-Smith', 'Julianos the Wise']
+        matching.each do |name|
+          expect(page.find 'tr', text: 'Varying members').to have_content name
+        end
+
+        mismatching = members.map { |m| "#{m[:forename]} #{m[:surname]}" } - matching
+        mismatching.each do |name|
+          expect(page.find 'tr', text: 'Varying members').to_not have_content name
+        end
+
+        # ...fixed members
+        matching = ['Ian Rankin', 'Bob Roberts', 'Ernie Wise', 'Julianos the Wise']
+        matching.each do |name|
+          expect(page.find 'tr', text: 'Fixed members').to have_content name
+        end
+
+        mismatching = members.map { |m| "#{m[:forename]} #{m[:surname]}" } - matching
+        mismatching.each do |name|
+          expect(page.find 'tr', text: 'Fixed members').to_not have_content name
+        end
       end
 
       describe "with js", js: true do
@@ -515,12 +581,25 @@ describe "MailingLists" do
         page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
         page.select "#{@member3.forename} #{@member3.surname}", from: 'Members'
         click_button 'Save'
-        expect(MailingList.last.members).to match_array [@member2, @member3]
+        expect(@simple_dynamic_list.members true).to match_array [@member2, @member3]
         expect(page.find 'tr', text: 'Varying members').to have_css('td', text: "<postcode> EQUALS 'AA0 0AA'")
       end
 
       it "ignores a hidden dynamic query", js: true do
-        fail "write this test before commit"
+        visit mailing_list_path(@complex_dynamic_list)
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text: "<membership> EQUALS 'Life Patron' OR (<membership> EQUALS 'Patron' AND <subs_paid> EQUALS 'true'")
+
+        click_link 'Edit'
+
+        click_button 'Remove query'
+
+        # Select some members
+        page.unselect "#{@member1.forename} #{@member1.surname}", from: 'Members'
+        page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
+        page.select "#{@member3.forename} #{@member3.surname}", from: 'Members'
+        click_button 'Save'
+        expect(@complex_dynamic_list.members(true)).to match_array [@member2, @member3]
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text: 'No query')
       end
 
       describe "redisplays the edit form with invalid params" do

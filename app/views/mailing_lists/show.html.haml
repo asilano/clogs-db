@@ -15,7 +15,14 @@
           %br
   %tr
     %th Varying members:
-    %td= display_query @list.query
+    %td
+      = display_query @list.query
+      - dynamic_members = Member.search(@list.query).result
+      .member-list
+        = check_box_hack "Currently " + pluralize(dynamic_members.count, 'member') + " (of #{Member.count} total)", "dyn_members_list" do
+          - dynamic_members.name_order.each do |member|
+            = link_to(member.fullname, member_path(member))
+            %br
 %div
   = icon_link 'envelope', new_mail_shot_path(@list)
   = link_to 'Email this list', new_mail_shot_path(@list)

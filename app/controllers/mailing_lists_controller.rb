@@ -63,6 +63,7 @@ class MailingListsController < ApplicationController
   # PUT /mailing_lists/1
   # PUT /mailing_lists/1.json
   def update
+    params[:mailing_list][:query] = {} if params[:suppress_query_form]
     @list = MailingList.find(params[:id])
 
     respond_to do |format|
