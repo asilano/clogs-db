@@ -17,7 +17,9 @@ class MailShot
   def send_emails
     list = MailingList.find(@mailing_list_id)
 
-    list.members.each do |recpt|
+    members = list.members
+    members += Member.search(list.query).result if list.query.present?
+    members.uniq.each do |recpt|
       next unless recpt.email =~ EMAIL_PATTERN
 
       body = merge_body recpt

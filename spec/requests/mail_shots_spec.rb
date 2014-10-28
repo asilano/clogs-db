@@ -32,6 +32,8 @@ describe 'MailShots' do
       @mailing_list = FactoryGirl.create(:mailing_list)
       @sub_list = FactoryGirl.create(:small_mailing_list)
       @empty_list = FactoryGirl.create(:mailing_list, name: 'Empty List')
+      @simple_dynamic_list = FactoryGirl.create(:simple_dynamic_list)
+      @complex_dynamic_list = FactoryGirl.create(:complex_dynamic_list)
 
       @member1 = FactoryGirl.create(:member, forename: 'John', surname: 'Smith', email: 'j.smith@example.com')
       @member2 = FactoryGirl.create(:member, forename: 'Jane', surname: 'Doe', email: 'janed@example.com')
@@ -121,7 +123,79 @@ describe 'MailShots' do
       end
 
       it "should resolve the mailing list's dynamic query" do
-        fail "write this test before commit"
+        # We'll need a number of Members for this test, with varying information that matches - or not - the
+        # defined queries. We'll be working with "<forename or email> CONTAINS 'ian'" and
+        # "<membership> EQUALS 'Life Patron' OR (<membership> EQUALS 'Patron' AND <subs_paid> EQUALS 'true'"
+        details = [
+          {forename: 'Ian', surname: 'Rankin', email: 'ir@example.com'},
+          {forename: 'John', surname: 'Smith', email: 'js.ians.mate@example.com'},
+          {forename: 'Bob', surname: 'Roberts', membership: 'Patron', subs_paid: true, email: 'bob@example.com'},
+          {forename: 'Jane', surname: 'Ian', email:'jane@example.com'},
+          {forename: 'Brian', surname: 'Cox', membership: 'Life Patron', email: 'coxy@example.com'},
+          {forename: 'Ian', surname: 'Duncan-Smith', email: 'iands@example.com'},
+          {forename: 'Ernie', surname: 'Wise', membership: 'Patron', subs_paid: false, email: 'him@example.com'},
+          {forename: 'Julianos', surname: 'the Wise', email: 'deity@example.com'}
+        ]
+        Member.destroy_all
+        members = details.map { |member| Member.create member }
+        expect(Member.count).to eq details.size
+
+        subject = "Test email"
+        body = "Hello,\n\nThis is a test email."
+
+        visit new_mail_shot_path
+        select @simple_dynamic_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        click_button 'Send'
+
+        # Check we email all the Ians in forename and email. Expect case insensitivity
+        matching = [0, 1, 4, 5, 7].map { |n| members[n] }
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq matching.count
+
+        matching.zip(all_emails) do |row|
+          member = row[0]
+          email = row[1]
+          expect(email.to).to eq [member.email]
+          expect(email.subject).to eq subject
+          expect(email.body).to eq body
+        end
+
+        # Now check we email the patrons
+        ActionMailer::Base.deliveries.clear
+        visit new_mail_shot_path
+        select @complex_dynamic_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        click_button 'Send'
+        matching = [2, 4].map { |n| members[n] }
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq matching.count
+
+        matching.zip(all_emails) do |row|
+          member = row[0]
+          email = row[1]
+          expect(email.to).to eq [member.email]
+          expect(email.subject).to eq subject
+          expect(email.body).to eq body
+        end
+
+        # Test list with fixed and dynamic members
+        @simple_dynamic_list.members = Member.where { surname.like_any ['Rankin', 'Roberts', '%Wise'] }
+        @simple_dynamic_list.save
+
+        # Varying members and fixed members are emailed, only once each
+        ActionMailer::Base.deliveries.clear
+        visit new_mail_shot_path
+        select @simple_dynamic_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        click_button 'Send'
+        matching = [0, 1, 2, 4, 5, 6, 7].map { |n| [members[n].email] }
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq matching.count
+        expect(all_emails.map(&:to)).to match_array(matching)
       end
 
       it "should error if body is absent" do
@@ -171,6 +245,10 @@ describe 'MailShots' do
         expect(page).to have_css('li', text: @member2.fullname)
       end
 
+      it "should warn about dynamic members with no email address" do
+        fail "write this test before commit"
+      end
+
       it "should ignore members with no email address" do
         @member1.email = nil
         @member2.email = "fake-emil"
@@ -192,6 +270,10 @@ describe 'MailShots' do
           expect(email.subject).to eq 'Test email'
           expect(email.body).to eq "Hello,\n\nThis is a test email."
         end
+      end
+
+      it "should ignore dynamic members with no email address" do
+        fail "write this test before commit"
       end
     end
 
