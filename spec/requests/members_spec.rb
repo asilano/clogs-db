@@ -158,6 +158,46 @@ describe "Members" do
           expect(current_path).to eq mailing_list_path(list)
         end
       end
+
+      it "includes the currently-matching dynamic lists" do
+        details = [
+          {forename: 'Ian', surname: 'Rankin', email: 'ir@example.com'},
+          {forename: 'John', surname: 'Smith', email: 'js.ians.mate@example.com'},
+          {forename: 'Bob', surname: 'Roberts', membership: 'Patron', subs_paid: true, email: 'bob@example.com'},
+          {forename: 'Jane', surname: 'Ian', email:'jane@example.com'},
+          {forename: 'Brian', surname: 'Cox', membership: 'Life Patron', email: 'coxy@example.com'},
+          {forename: 'Ian', surname: 'Duncan-Smith', email: 'fake-email'},
+          {forename: 'Ernie', surname: 'Wise', membership: 'Patron', subs_paid: false, email: 'him@example.com'},
+          {forename: 'Julianos', surname: 'the Wise', email: nil}
+        ]
+        Member.destroy_all
+        members = details.map { |member| Member.create member }
+        expect(Member.count).to eq details.size
+
+        @simple_dynamic_list = FactoryGirl.create(:simple_dynamic_list)   # Ians
+        @complex_dynamic_list = FactoryGirl.create(:complex_dynamic_list) # Patrons
+
+        visit member_path(members[0].id)
+        expect(page).to have_css('li a', text: @simple_dynamic_list.name)
+        expect(page).to_not have_css('li a', text: @complex_dynamic_list.name)
+        click_link @simple_dynamic_list.name
+        expect(current_path).to eq mailing_list_path(@simple_dynamic_list)
+
+        visit member_path(members[2].id)
+        expect(page).to have_css('li a', text: @complex_dynamic_list.name)
+        expect(page).to_not have_css('li a', text: @simple_dynamic_list.name)
+        click_link @complex_dynamic_list.name
+        expect(current_path).to eq mailing_list_path(@complex_dynamic_list)
+
+        visit member_path(members[4].id)
+        expect(page).to have_css('li a', text: @simple_dynamic_list.name)
+        expect(page).to have_css('li a', text: @complex_dynamic_list.name)
+
+        visit member_path(members[3].id)
+        expect(page).to_not have_css('li a', text: @simple_dynamic_list.name)
+        expect(page).to_not have_css('li a', text: @complex_dynamic_list.name)
+        expect(page).to_not have_content('Currently matches the query')
+      end
     end
 
     describe "create member through form" do

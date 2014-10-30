@@ -246,7 +246,32 @@ describe 'MailShots' do
       end
 
       it "should warn about dynamic members with no email address" do
-        fail "write this test before commit"
+        details = [
+          {forename: 'Ian', surname: 'Rankin', email: 'ir@example.com'},
+          {forename: 'John', surname: 'Smith', email: 'js.ians.mate@example.com'},
+          {forename: 'Bob', surname: 'Roberts', membership: 'Patron', subs_paid: true, email: 'bob@example.com'},
+          {forename: 'Jane', surname: 'Ian', email:'jane@example.com'},
+          {forename: 'Brian', surname: 'Cox', membership: 'Life Patron', email: 'coxy@example.com'},
+          {forename: 'Ian', surname: 'Duncan-Smith', email: 'fake-email'},
+          {forename: 'Ernie', surname: 'Wise', membership: 'Patron', subs_paid: false, email: 'him@example.com'},
+          {forename: 'Julianos', surname: 'the Wise', email: nil}
+        ]
+        Member.destroy_all
+        members = details.map { |member| Member.create member }
+        expect(Member.count).to eq details.size
+
+        subject = "Test email"
+        body = "Hello,\n\nThis is a test email."
+
+        visit new_mail_shot_path
+        select @simple_dynamic_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        click_button 'Send'
+
+        expect(page).to have_content('The following members will not be emailed, as they do not have a configured email address')
+        expect(page).to have_css('li', text: 'Ian Duncan-Smith')
+        expect(page).to have_css('li', text: 'Julianos the Wise')
       end
 
       it "should ignore members with no email address" do
@@ -273,7 +298,41 @@ describe 'MailShots' do
       end
 
       it "should ignore dynamic members with no email address" do
-        fail "write this test before commit"
+        details = [
+          {forename: 'Ian', surname: 'Rankin', email: 'ir@example.com'},
+          {forename: 'John', surname: 'Smith', email: 'js.ians.mate@example.com'},
+          {forename: 'Bob', surname: 'Roberts', membership: 'Patron', subs_paid: true, email: 'bob@example.com'},
+          {forename: 'Jane', surname: 'Ian', email:'jane@example.com'},
+          {forename: 'Brian', surname: 'Cox', membership: 'Life Patron', email: 'coxy@example.com'},
+          {forename: 'Ian', surname: 'Duncan-Smith', email: 'fake-email'},
+          {forename: 'Ernie', surname: 'Wise', membership: 'Patron', subs_paid: false, email: 'him@example.com'},
+          {forename: 'Julianos', surname: 'the Wise', email: nil}
+        ]
+        Member.destroy_all
+        members = details.map { |member| Member.create member }
+        expect(Member.count).to eq details.size
+
+        subject = "Test email"
+        body = "Hello,\n\nThis is a test email."
+
+        visit new_mail_shot_path
+        select @simple_dynamic_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        click_button 'Send'
+
+        # Pick up the matching members with email addresses
+        matching = [0, 1, 4].map { |n| members[n] }
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq matching.count
+
+        matching.zip(all_emails) do |row|
+          member = row[0]
+          email = row[1]
+          expect(email.to).to eq [member.email]
+          expect(email.subject).to eq subject
+          expect(email.body).to eq body
+        end
       end
     end
 

@@ -33,7 +33,9 @@ class MailShotsController < ApplicationController
       flash[:notice] = "Emails created, and queued for delivery."
 
       # Report synchronously those members which we know will fail, due to having no email address
-      no_email_members = @list.members.select { |m| m.email !~ EMAIL_PATTERN }
+      members = @list.members
+      members += Member.search(@list.query).result if @list.query.present?
+      no_email_members = members.select { |m| m.email !~ EMAIL_PATTERN }
       unless no_email_members.empty?
         flash[:notice] << "<br/><br/>The following members will not be emailed, as they do not have a configured email address:"
         flash[:notice] << '<ul>'.html_safe
