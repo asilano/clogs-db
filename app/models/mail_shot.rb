@@ -23,6 +23,7 @@ class MailShot
       next unless recpt.email =~ EMAIL_PATTERN
 
       body = merge_body recpt
+      body += unsubscribe_text
       mail = ActionMailer::Base.mail from: ENV['SOCIETY_EMAIL'], to: recpt.email, subject: @subject
       if @attachments
         mail.content_type = 'multipart/mixed'
@@ -43,5 +44,13 @@ class MailShot
 private
   def merge_body(member)
     MERGE_FIELDS.inject(@body) { |body, field| body.gsub "<#{field}>", member.send(field).to_s }
+  end
+
+  def unsubscribe_text
+    "
+
+----
+This is the mailing list of CLOGS Musical Theatre, Chippenham.
+If you wish to unsubscribe from this list, or to have your details removed from our database entirely, please reply to this email."
   end
 end

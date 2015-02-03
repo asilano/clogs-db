@@ -20,6 +20,12 @@ describe 'MailShots' do
   end
 
   describe "while logged in" do
+      footer = "
+
+----
+This is the mailing list of CLOGS Musical Theatre, Chippenham.
+If you wish to unsubscribe from this list, or to have your details removed from our database entirely, please reply to this email."
+
     let(:user) { FactoryGirl.create(:user) }
     before(:each) do
       visit new_user_session_path
@@ -118,7 +124,7 @@ describe 'MailShots' do
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq body
+          expect(email.body).to eq (body + footer)
         end
       end
 
@@ -159,7 +165,7 @@ describe 'MailShots' do
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq body
+          expect(email.body).to eq (body + footer)
         end
 
         # Now check we email the patrons
@@ -178,7 +184,7 @@ describe 'MailShots' do
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq body
+          expect(email.body).to eq (body + footer)
         end
 
         # Test list with fixed and dynamic members
@@ -293,7 +299,7 @@ describe 'MailShots' do
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq 'Test email'
-          expect(email.body).to eq "Hello,\n\nThis is a test email."
+          expect(email.body).to eq ("Hello,\n\nThis is a test email." + footer)
         end
       end
 
@@ -331,7 +337,7 @@ describe 'MailShots' do
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq body
+          expect(email.body).to eq (body + footer)
         end
       end
     end
@@ -359,7 +365,7 @@ describe 'MailShots' do
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq body.sub(/<forename>/, member.forename)
+          expect(email.body).to eq (body.sub(/<forename>/, member.forename) + footer)
         end
       end
 
@@ -415,6 +421,11 @@ false
 true
 Only some members, Publicity
 Married to Jane
+
+
+----
+This is the mailing list of CLOGS Musical Theatre, Chippenham.
+If you wish to unsubscribe from this list, or to have your details removed from our database entirely, please reply to this email.
 EOD
         visit new_mail_shot_path
         select @mailing_list.name, from: 'Mailing list'
@@ -423,7 +434,7 @@ EOD
         click_button 'Send'
 
         expect(Delayed::Worker.new.work_off).to eq [1, 0]
-        expect(last_email.body).to eq expected_body
+        expect(last_email.body).to eq expected_body.chomp
       end
 
       it "should ignore wrong mail-merge fields" do
