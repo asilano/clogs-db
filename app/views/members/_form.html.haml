@@ -35,10 +35,10 @@
         = f.text_field :postcode
       .field
         = f.label :phone
-        = f.text_field :phone
+        = f.phone_field :phone
       .field
         = f.label :mobile
-        = f.text_field :mobile
+        = f.phone_field :mobile
     .column
       .field
         = f.label :voice
@@ -48,7 +48,7 @@
         = f.text_field :membership
       .field
         = f.label :email
-        = f.text_field :email
+        = f.email_field :email
       .field
         = f.label :notes
         = f.text_field :notes, size: 50
