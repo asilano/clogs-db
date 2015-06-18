@@ -1,7 +1,7 @@
 class MailShot
   MERGE_FIELDS = [:forename, :surname, :fullname, :addr1, :addr2, :addr3, :town, :county, :postcode,
                   :address, :phone, :mobile, :voice, :membership, :email, :subs_paid, :show_fee_paid,
-                  :concert_fee_paid, :mailing_list_names, :notes]
+                  :concert_fee_paid, :mailing_list_names, :notes, :join_year]
 
   Attachment = Struct.new(:filename, :data, :mime_type)
 

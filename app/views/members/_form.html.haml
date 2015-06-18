@@ -53,6 +53,9 @@
         = f.label :notes
         = f.text_field :notes, size: 50
       .field
+        = f.label :join_year, "Joined (year):"
+        = f.number_field :join_year
+      .field
         = f.label :subs_paid
         = f.check_box :subs_paid
       .field

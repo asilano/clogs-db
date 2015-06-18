@@ -27,6 +27,7 @@ group :development, :test do
   gem "rspec-rails", '~> 2.14.0'
   gem "factory_girl_rails"
   gem "spork-rails"
+  gem 'coffee-script-source', '1.8.0'
 
   # Use thin web-server in dev
   gem 'thin'

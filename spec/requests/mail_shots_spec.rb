@@ -394,6 +394,7 @@ If you wish to unsubscribe from this list, or to have your details removed from 
 <concert_fee_paid>
 <mailing_list_names>
 <notes>
+<join_year>
 EOD
         expected_body = <<EOD
 John
@@ -421,6 +422,7 @@ false
 true
 Only some members, Publicity
 Married to Jane
+2010
 
 
 ----

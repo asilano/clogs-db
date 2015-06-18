@@ -19,6 +19,7 @@ FactoryGirl.define do
     show_fee_paid false
     concert_fee_paid true
     notes 'Married to Jane'
+    join_year 2010
 
     after(:create) {|member| member.mailing_lists = [MailingList.first || create(:mailing_list)]}
   end

@@ -15,6 +15,7 @@
       %th.sortcol Voice
       %th.sortcol Membership
       %th.sortcol Email
+      %th.sortcol Joined
       %th.sortcol Subs paid
       %th.sortcol Show paid
       %th.sortcol Concert paid
@@ -34,6 +35,7 @@
         %td= member.voice
         %td= member.membership
         %td= member.email
+        %td= "#{member.join_year} (#{Time.now.year - member.join_year} yrs)" unless member.join_year.blank?
         %td= link_to tick_or_cross(member.subs_paid), toggle_paid_member_path(member, fee: 'subs'), method: :put, :class => 'only-icon', id: "subs-#{member.id}", remote: true
         %td= link_to tick_or_cross(member.show_fee_paid), toggle_paid_member_path(member, fee: 'show'), method: :put, :class => 'only-icon', id: "show-#{member.id}", remote: true
         %td= link_to tick_or_cross(member.concert_fee_paid), toggle_paid_member_path(member, fee: 'concert'), method: :put, :class => 'only-icon', id: "concert-#{member.id}", remote: true
