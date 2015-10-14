@@ -7,6 +7,9 @@
     .field
       = label_tag :subject, "Subject"
       = text_field_tag :subject, nil, size: 50
+    .field
+      = check_box_tag :reply_to_sender, 1, true
+      = label_tag :reply_to_sender, "Direct replies to your email address"
     .field.with-descr
       = label_tag :body, 'Mail shot text'
       = text_area_tag :body, nil, rows: 25, cols: 80

@@ -128,6 +128,54 @@ If you wish to unsubscribe from this list, or to have your details removed from 
         end
       end
 
+      it "should include reply_to when checkbox ticked" do
+        subject = "Test email"
+        body = "Hello,\n\nThis is a test email."
+
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        check "Direct replies to your email address"
+        click_button 'Send'
+
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq @sub_list.members.count
+
+        @sub_list.members.zip(all_emails) do |row|
+          member = row[0]
+          email = row[1]
+          expect(email.to).to eq [member.email]
+          expect(email.subject).to eq subject
+          expect(email.body).to eq (body + footer)
+          expect(email.reply_to).to eq [user.email]
+        end
+      end
+
+      it "should not include reply_to when checkbox unticked" do
+        subject = "Test email"
+        body = "Hello,\n\nThis is a test email."
+
+        visit new_mail_shot_path
+        select @sub_list.name, from: 'Mailing list'
+        fill_in :subject, with: subject
+        fill_in :body, with: body
+        uncheck "Direct replies to your email address"
+        click_button 'Send'
+
+        expect(Delayed::Worker.new.work_off).to eq [1, 0]
+        expect(all_emails.count).to eq @sub_list.members.count
+
+        @sub_list.members.zip(all_emails) do |row|
+          member = row[0]
+          email = row[1]
+          expect(email.to).to eq [member.email]
+          expect(email.subject).to eq subject
+          expect(email.body).to eq (body + footer)
+          expect(email.reply_to).to eq []
+        end
+      end
+
       it "should resolve the mailing list's dynamic query" do
         # We'll need a number of Members for this test, with varying information that matches - or not - the
         # defined queries. We'll be working with "<forename or email> CONTAINS 'ian'" and

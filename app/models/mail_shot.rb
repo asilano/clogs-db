@@ -5,10 +5,11 @@ class MailShot
 
   Attachment = Struct.new(:filename, :data, :mime_type)
 
-  def initialize(params)
+  def initialize(current_user, params)
     @mailing_list_id = params[:mailing_list_id]
     @subject = params[:subject]
     @body = params[:body]
+    @reply_to = current_user.email if params[:reply_to_sender]
     @attachments = params[:attachments].andand.map do |attach|
       Attachment.new(attach.original_filename, attach.read, attach.content_type)
     end
@@ -24,7 +25,7 @@ class MailShot
 
       body = merge_body recpt
       body += unsubscribe_text
-      mail = ActionMailer::Base.mail from: ENV['SOCIETY_EMAIL'], to: recpt.email, subject: @subject
+      mail = ActionMailer::Base.mail from: ENV['SOCIETY_EMAIL'], to: recpt.email, subject: @subject, reply_to: @reply_to
       if @attachments
         mail.content_type = 'multipart/mixed'
         mail.part content_type: 'text/plain', body: body
