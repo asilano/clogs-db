@@ -78,6 +78,7 @@ describe "MailingLists" do
       @empty_list = FactoryGirl.create(:mailing_list, name: 'Empty List')
       @simple_dynamic_list = FactoryGirl.create(:simple_dynamic_list)
       @complex_dynamic_list = FactoryGirl.create(:complex_dynamic_list)
+      @list_difference_list = FactoryGirl.create(:list_difference)
 
       @member1 = FactoryGirl.create(:member, forename: 'John', surname: 'Smith')
       @member2 = FactoryGirl.create(:member, forename: 'Jane', surname: 'Doe')
@@ -156,12 +157,16 @@ describe "MailingLists" do
         # Query for complex dynamic list
         visit mailing_list_path(@complex_dynamic_list)
         expect(page.find 'tr', text: 'Varying members').to have_css('td', text: "<membership> EQUALS 'Life Patron' OR (<membership> EQUALS 'Patron' AND <subs_paid> EQUALS 'true'")
+
+        # Query including references to static lists
+        visit mailing_list_path(@list_difference_list)
+        expect(page.find 'tr', text: 'Varying members').to have_css('td', text: "<mailing_lists_name> EQUALS 'Publicity' AND <mailing_lists_name> NOT EQUAL TO 'Only some members'")
       end
 
       it "displays current matching members for dynamic query" do
         # We'll need a number of Members for this test, with varying information that matches - or not - the
         # defined queries. We'll be working with "<forename or email> CONTAINS 'ian'" and
-        # "<membership> EQUALS 'Life Patron' OR (<membership> EQUALS 'Patron' AND <subs_paid> EQUALS 'true'"
+        # "<membership> EQUALS 'Life Patron' OR (<membership> EQUALS 'Patron' AND <subs_paid> EQUALS 'true')"
         members = [
           {forename: 'Ian', surname: 'Rankin'},
           {forename: 'John', surname: 'Smith', email: 'js.ians.mate@example.com'},
@@ -224,6 +229,22 @@ describe "MailingLists" do
         end
 
         mismatching = members.map { |m| "#{m[:forename]} #{m[:surname]}" } - matching
+        mismatching.each do |name|
+          expect(page.find 'tr', text: 'Fixed members').to_not have_content name
+        end
+
+        # Test list referring to other lists
+        @mailing_list.members = Member.all
+        @mailing_list.save
+        @sub_list.members = [2,3,5,7].map { |ix| Member.where { (forename == members[ix][:forename]) & (surname == members[ix][:surname]) }.first }
+        @sub_list.save
+        visit mailing_list_path @list_difference_list
+        matching = members.values_at(0,1,4,6).map { |m| "#{m[:forename]} #{m[:surname]}" }
+        matching.each do |name|
+          expect(page.find 'tr', text: 'Varying members').to have_content name
+        end
+
+        mismatching = members.values_at(2,3,5,7).map { |m| "#{m[:forename]} #{m[:surname]}" }
         mismatching.each do |name|
           expect(page.find 'tr', text: 'Fixed members').to_not have_content name
         end
