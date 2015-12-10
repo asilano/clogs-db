@@ -60,4 +60,35 @@ FactoryGirl.define do
       }
     }}
   end
+
+  factory :list_difference, class: MailingList do
+    name 'Difference between lists'
+    query {{
+      'g' => {
+        '0' => {
+          'm' => 'and',
+          'c' => {
+            '1' => {
+              'a' => {
+                '0' => {'name' => 'mailing_lists_name'}
+              },
+              'p' => 'eq',
+              'v' => {
+                '0' => {'value' => 'Publicity'}
+              }
+            },
+            '2' => {
+              'a' => {
+                '0' => {'name' => 'mailing_lists_name'}
+              },
+              'p' => 'not_eq',
+              'v' => {
+                '0' => {'value' => 'Only some members'}
+              }
+            }
+          }
+        }
+      }
+      }}
+  end
 end
