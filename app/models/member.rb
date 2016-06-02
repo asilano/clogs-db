@@ -1,10 +1,19 @@
 class Member < ActiveRecord::Base
+  extend FriendlyId
+  friendly_id :fullname, use: :slugged
+
   attr_accessible :addr1, :addr2, :addr3, :concert_fee_paid, :county, :email, :forename, :membership, :mobile,
                   :phone, :postcode, :show_fee_paid, :subs_paid, :surname, :town, :voice,
                   :mailing_list_ids, :notes, :join_year
   has_and_belongs_to_many :mailing_lists
 
   scope :name_order, -> { order('surname, forename') }
+
+  after_validation :move_friendly_id_error_to_name
+
+  def move_friendly_id_error_to_name
+    errors.add :name, *errors.delete(:friendly_id) if errors[:friendly_id].present?
+  end
 
   def fullname
     "#{forename} #{surname}"

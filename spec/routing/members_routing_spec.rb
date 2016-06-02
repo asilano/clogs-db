@@ -13,10 +13,12 @@ describe MembersController do
 
     it "routes to #show" do
       expect(get("/members/1")).to route_to("members#show", :id => "1")
+      expect(get("/members/john-smith")).to route_to("members#show", :id => "john-smith")
     end
 
     it "routes to #edit" do
       expect(get("/members/1/edit")).to route_to("members#edit", :id => "1")
+      expect(get("/members/john-smith/edit")).to route_to("members#edit", :id => "john-smith")
     end
 
     it "routes to #create" do
@@ -25,10 +27,12 @@ describe MembersController do
 
     it "routes to #update" do
       expect(put("/members/1")).to route_to("members#update", :id => "1")
+      expect(put("/members/john-smith")).to route_to("members#update", :id => "john-smith")
     end
 
     it "routes to #destroy" do
       expect(delete("/members/1")).to route_to("members#destroy", :id => "1")
+      expect(delete("/members/john-smith")).to route_to("members#destroy", :id => "john-smith")
     end
 
   end

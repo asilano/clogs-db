@@ -38,13 +38,13 @@
         %td= "#{member.join_year} (#{Time.now.year - member.join_year} yrs)" unless member.join_year.blank?
         %td
           %span.hidden= member.subs_paid ? 'aye' : 'nay'
-          = link_to tick_or_cross(member.subs_paid), toggle_paid_member_path(member, fee: 'subs'), method: :put, :class => 'only-icon', id: "subs-#{member.id}", remote: true
+          = link_to tick_or_cross(member.subs_paid), toggle_paid_member_path(member, fee: 'subs'), method: :put, :class => 'only-icon', id: "subs-#{member.to_param}", remote: true
         %td
           %span.hidden= member.show_fee_paid ? 'aye' : 'nay'
-          = link_to tick_or_cross(member.show_fee_paid), toggle_paid_member_path(member, fee: 'show'), method: :put, :class => 'only-icon', id: "show-#{member.id}", remote: true
+          = link_to tick_or_cross(member.show_fee_paid), toggle_paid_member_path(member, fee: 'show'), method: :put, :class => 'only-icon', id: "show-#{member.to_param}", remote: true
         %td
           %span.hidden= member.concert_fee_paid ? 'aye' : 'nay'
-          = link_to tick_or_cross(member.concert_fee_paid), toggle_paid_member_path(member, fee: 'concert'), method: :put, :class => 'only-icon', id: "concert-#{member.id}", remote: true
+          = link_to tick_or_cross(member.concert_fee_paid), toggle_paid_member_path(member, fee: 'concert'), method: :put, :class => 'only-icon', id: "concert-#{member.to_param}", remote: true
 
 %br
 

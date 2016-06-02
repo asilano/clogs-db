@@ -221,7 +221,8 @@ describe "Members" do
         fill_in 'Notes', with: 'My uncle'
         click_button 'Save'
 
-        expect(current_path).to eq member_path(max_id + 1)
+        expect(current_path).to eq member_path('bob-roberts')
+        expect(Member.last.id).to eq (max_id + 1)
         expect(Member.last.forename).to eq 'Bob'
         expect(Member.last.mailing_lists.map(&:name)).to match_array [@list_one.name, @list_three.name]
         expect(page).to have_content('Roberts')

@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source 'http://gems.github.com'
 
 ruby '1.9.3'
 gem 'rails', '~> 3.2.1'
@@ -88,6 +89,9 @@ gem "workless", "~> 1.1.3", :group => :production
 
 # To display phone numbers correctly
 gem 'uk_phone_numbers'
+
+# To provide friendly URLs
+gem 'friendly_id', '~> 4.0.10'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
