@@ -89,14 +89,3 @@ module ClogsDb
     config.compass.require 'sassy-buttons'
   end
 end
-
-ActionMailer::Base.smtp_settings = {
-  :address              => ENV['MAIL_SERV'],
-  :port                 => ENV['MAIL_PORT'],
-  :domain               => ENV['MAIL_DOM'],
-  :user_name            => ENV['MAIL_USER'],
-  :password             => ENV['MAIL_PASS'],
-  :authentication       => "plain",
-  :enable_starttls_auto => true,
-  :openssl_verify_mode  => 'none'
-}
