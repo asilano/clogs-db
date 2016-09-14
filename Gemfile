@@ -48,6 +48,7 @@ group :test do
   gem "launchy"
   gem "capybara", '~> 2.3.0'
   gem 'selenium-webdriver'
+  gem 'tins', '~> 1.6.0'
   gem 'coveralls', require: false
   gem 'timecop'
   gem 'shoulda-matchers'
