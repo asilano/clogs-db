@@ -11,8 +11,8 @@ class InboundParseController < ApplicationController
     b64_addr = match[1]
     addr = Base64::decode64(b64_addr)
 
-    # And do so
-    mail = ActionMailer::Base.mail from: ENV['SOCIETY_EMAIL'], to: addr, subject: inbound_mail.subject
+    # And do so. Just frobble the to address, and add replace the body.
+    inbound_mail.to = addr
     out_body = <<EOM
 Hi there!
 
@@ -28,14 +28,11 @@ Message:
 
 EOM
 
-    mail.content_type = 'multipart/mixed'
-    mail.part content_type: 'text/plain', body: out_body
-    inbound_mail.attachments.each do |att|
-      mail.attachments[att.filename] = att.encoded
-    end
-    mail.deliver
+    text_pt = inbound_mail.parts.detect { |pt| pt.content_type =~ /^text\/plain/ }
+    text_pt.body = out_body
+    inbound_mail.deliver
 
-    render text: "Received: #{params}"
+    render text: "Handled email"
   end
 
 end
