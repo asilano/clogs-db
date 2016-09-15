@@ -328,6 +328,7 @@ DEPENDENCIES
   squeel
   thin
   timecop
+  tins
   uglifier (>= 1.0.3)
   uk_phone_numbers
   unicorn

@@ -18,6 +18,8 @@ ClogsDb::Application.routes.draw do
     post 'create', to: 'mail_shots#create', as: 'create_mail_shot'
   end
 
+  post 'parse_mail', to: 'inbound_parse#parse'
+
   root to: 'members#index'
 
   # The priority is based upon order of creation:
