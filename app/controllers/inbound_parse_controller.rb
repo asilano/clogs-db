@@ -36,7 +36,9 @@ EOM
       end
     end
     mail.deliver
-
+  rescue
+    AdminMailer.bounce_on_failed(params).deliver
+  ensure
     render text: "Received: #{params}"
   end
 

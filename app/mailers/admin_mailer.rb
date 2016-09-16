@@ -11,4 +11,10 @@ class AdminMailer < ActionMailer::Base
 
     mail to: ENV['ADMIN_EMAIL'], subject: "User wants approval for Clogs Members"
   end
+
+  def bounce_on_failed(orig)
+    @orig = orig
+
+    mail to: ENV['ADMIN_EMAIL'], subject: "Bounce-on failed"
+  end
 end
