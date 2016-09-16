@@ -4,7 +4,7 @@ class InboundParseController < ApplicationController
 
   def parse
     inbound_mail = Mail.new(params["email"])
-    body = inbound_mail.text_part.decoded
+    body = (inbound_mail.text_part || inbound_mail.body).decoded
 
     # Look for the magic string that tells us where to bounce it
     match = /RMID: (.*)$/.match(body)
