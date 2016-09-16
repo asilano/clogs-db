@@ -31,7 +31,9 @@ EOM
     mail.content_type = 'multipart/mixed'
     mail.part content_type: 'text/plain', body: out_body
     inbound_mail.attachments.each do |att|
-      mail.attachments[att.filename] = att.decoded
+      if att
+        mail.attachments[att.filename] = att.decoded
+      end
     end
     mail.deliver
 
