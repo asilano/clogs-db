@@ -3,7 +3,9 @@ class MailShotsController < ApplicationController
   before_filter :authenticate_user!
 
   def new
-    @list = MailingList.find_by_id(params[:mailing_list_id].to_i)
+    if params[:mailing_list_id].to_i > 0
+      @list = MailingList.find_by_id(params[:mailing_list_id].to_i)
+    end
   end
 
   def create
@@ -44,6 +46,6 @@ class MailShotsController < ApplicationController
       end
     end
 
-    redirect_to action: :new, mailing_list_id: @list.andand.id || 1
+    render action: :new, mailing_list_id: @list.andand.id || -1
   end
 end

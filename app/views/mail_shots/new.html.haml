@@ -3,7 +3,7 @@
     %legend= "Compose mail shot"
     .field
       = label_tag :mailing_list_id, "Mailing list"
-      = select_tag :mailing_list_id, options_from_collection_for_select(MailingList.all, "id", "name", @list.andand.id)
+      = select_tag :mailing_list_id, options_from_collection_for_select(MailingList.all, "id", "name", @list.andand.id), include_blank: true, required: true
     .field
       = label_tag :subject, "Subject"
       = text_field_tag :subject, nil, size: 50
