@@ -55,7 +55,7 @@ describe MailShotsController do
       describe "with valid params" do
         it "redirects to the new mail-shot page" do
           post :create, valid_attributes
-          expect(response).to redirect_to(new_mail_shot_path mailing_list_id: mailing_list.id)
+          expect(response).to render_template(:new)
         end
 
         it "has a successful flash" do
@@ -72,7 +72,7 @@ describe MailShotsController do
       describe "with invalid params" do
         it "redirects to the new mail-shot page" do
           post :create, {:mailing_list_id => "invalid value"}
-          expect(response).to redirect_to(new_mail_shot_path)
+          expect(response).to render_template(:new)
         end
 
         it "has an error flash" do

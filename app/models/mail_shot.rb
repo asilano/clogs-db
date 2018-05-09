@@ -56,7 +56,7 @@ private
 ----
 
 If you wish to reply to the sender of this email, please reply leaving the following line intact:
-RMID: #{Base64.encode64(@reply_to)}
+RMID: #{Base64.encode64(@reply_to).chomp}
 
 This is the mailing list of CLOGS Musical Theatre, Chippenham.
 If you wish to unsubscribe from this list, or to have your details removed from our database entirely, please email dbadmin@chippenham-clogs.co.uk."

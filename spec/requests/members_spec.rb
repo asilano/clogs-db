@@ -280,11 +280,11 @@ describe "Members" do
 
       it "with javascript", js: true do
         visit members_path
-        expect(page.all('a span.icon-cross').count).to eq 3
+        expect(page).to have_selector('a span.icon-cross', count: 3)
 
         page.find('tr', text: @member.voice).first('a span.icon-cross').first(:xpath, './/..').click
 
-        expect(page.all('a span.icon-cross').count).to eq 2
+        expect(page).to have_selector('a span.icon-cross', count: 2)
         expect(Member.find(@member).subs_paid).to be_true
         expect(Member.find(@member).show_fee_paid).to be_true
         expect(Member.find(@member).concert_fee_paid).to be_true

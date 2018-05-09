@@ -20,11 +20,7 @@ describe 'MailShots' do
   end
 
   describe "while logged in" do
-      footer = "
-
-----
-This is the mailing list of CLOGS Musical Theatre, Chippenham.
-If you wish to unsubscribe from this list, or to have your details removed from our database entirely, please reply to this email."
+      footer = /\n\n----\n\nIf you wish to reply to the sender of this email, please reply leaving the following line intact:\nRMID: ([a-zA-Z0-9]+=*)\n\nThis is the mailing list of CLOGS Musical Theatre, Chippenham.\nIf you wish to unsubscribe from this list, or to have your details removed from our database entirely, please email dbadmin@chippenham-clogs.co.uk.$/
 
     let(:user) { FactoryGirl.create(:user) }
     before(:each) do
@@ -124,11 +120,12 @@ If you wish to unsubscribe from this list, or to have your details removed from 
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq (body + footer)
+          expect(email.body).to match(/^#{body}/)
+          expect(email.body).to match footer
         end
       end
 
-      it "should include reply_to when checkbox ticked" do
+      it "should include magic reply string when checkbox ticked" do
         subject = "Test email"
         body = "Hello,\n\nThis is a test email."
 
@@ -147,12 +144,12 @@ If you wish to unsubscribe from this list, or to have your details removed from 
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq (body + footer)
-          expect(email.reply_to).to eq [user.email]
+          expect(email.body).to match(/^#{body}/)
+          expect(email.body).to match footer
         end
       end
 
-      it "should not include reply_to when checkbox unticked" do
+      it "should include CLOGS magic reply string when checkbox unticked" do
         subject = "Test email"
         body = "Hello,\n\nThis is a test email."
 
@@ -171,8 +168,8 @@ If you wish to unsubscribe from this list, or to have your details removed from 
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq (body + footer)
-          expect(email.reply_to).to eq []
+          expect(email.body).to match(/^#{body}/)
+          expect(email.body).to match(footer)#.with_captures(Base64.encode64('CLOGS <clogs@example.com>'))
         end
       end
 
@@ -213,7 +210,8 @@ If you wish to unsubscribe from this list, or to have your details removed from 
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq (body + footer)
+          expect(email.body).to match(/^#{body}/)
+          expect(email.body).to match footer
         end
 
         # Now check we email the patrons
@@ -232,7 +230,8 @@ If you wish to unsubscribe from this list, or to have your details removed from 
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq (body + footer)
+          expect(email.body).to match(/^#{body}/)
+          expect(email.body).to match footer
         end
 
         # Test list with fixed and dynamic members
@@ -347,7 +346,8 @@ If you wish to unsubscribe from this list, or to have your details removed from 
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq 'Test email'
-          expect(email.body).to eq ("Hello,\n\nThis is a test email." + footer)
+          expect(email.body).to match(/^Hello,\n\nThis is a test email\./)
+          expect(email.body).to match footer
         end
       end
 
@@ -385,7 +385,8 @@ If you wish to unsubscribe from this list, or to have your details removed from 
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq (body + footer)
+          expect(email.body).to match(/^#{body}/)
+          expect(email.body).to match footer
         end
       end
     end
@@ -413,7 +414,9 @@ If you wish to unsubscribe from this list, or to have your details removed from 
           email = row[1]
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq subject
-          expect(email.body).to eq (body.sub(/<forename>/, member.forename) + footer)
+          this_body = body.sub(/<forename>/, member.forename)
+          expect(email.body).to match(/^#{this_body}/)
+          expect(email.body).to match footer
         end
       end
 
@@ -474,8 +477,6 @@ Married to Jane
 
 
 ----
-This is the mailing list of CLOGS Musical Theatre, Chippenham.
-If you wish to unsubscribe from this list, or to have your details removed from our database entirely, please reply to this email.
 EOD
         visit new_mail_shot_path
         select @mailing_list.name, from: 'Mailing list'
@@ -484,7 +485,8 @@ EOD
         click_button 'Send'
 
         expect(Delayed::Worker.new.work_off).to eq [1, 0]
-        expect(last_email.body).to eq expected_body.chomp
+        expect(last_email.body).to match(/^#{expected_body.chomp}/)
+        expect(last_email.body).to match footer
       end
 
       it "should ignore wrong mail-merge fields" do
