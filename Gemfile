@@ -3,10 +3,16 @@ source 'https://rubygems.org'
 ruby '1.9.3'
 gem 'rails', '~> 3.2.1'
 
+# Peg versions compatible with ruby 1.9.3
+gem 'rake', '~> 10.4.0'
+gem 'rack-cache', '~> 1.2.0'
+gem 'addressable', '~> 2.3.0'
+
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'pg'
+# Peg pg to version supported by Ruby 1.9.3
+gem 'pg', '~> 0.18.0'
 
 
 # Gems used only for assets and not required
@@ -37,7 +43,7 @@ group :development do
   gem "quiet_assets"
   gem "better_errors", '~> 1.1.0'
   gem "binding_of_caller"
-  gem "erb2haml"
+  #gem "erb2haml"
 end
 
 group :test do
@@ -47,13 +53,17 @@ group :test do
   gem "launchy"
   gem "capybara", '~> 2.3.0'
   gem 'selenium-webdriver'
-  gem 'tins'
   gem 'coveralls', require: false
   gem 'timecop'
   gem 'shoulda-matchers'
 
   # Let Travis see Rake
-  gem 'rake'
+  # gem 'rake'
+
+  # Peg to a version that supports Ruby 1.9.3
+  gem 'nokogiri', '~> 1.6.0'
+  gem 'tins', '1.3.3'
+  gem 'term-ansicolor', '~> 1.3.0'
 end
 
 group :production do
@@ -64,7 +74,8 @@ group :production do
 end
 
 gem 'jquery-rails'
-gem 'haml'
+# Peg to version that supports Ruby 1.9.3
+gem 'haml', '~> 4.0.0'
 gem 'haml-rails'
 
 gem 'attribute_normalizer'
@@ -81,7 +92,8 @@ gem 'devise'
 gem 'squeel'
 
 # Ransack - complex search forms
-gem 'ransack'
+# Peg to a version supported by Ruby 1.9.3
+gem 'ransack', '1.6.3'
 
 # Delayed job and manager for its workers
 gem "delayed_job_active_record"
