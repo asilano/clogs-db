@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '1.9.3'
+ruby '2.0.0'
 gem 'rails', '~> 3.2.1'
 
 # Peg versions compatible with ruby 1.9.3
@@ -47,12 +47,13 @@ group :development do
 end
 
 group :test do
-  gem 'debugger'
   gem "database_cleaner"
   gem "email_spec"
   gem "launchy"
   gem "capybara", '~> 2.3.0'
-  gem 'selenium-webdriver'
+
+  # Peg selenium. Plan to replace it with webkit
+  gem 'selenium-webdriver', '2.53.4'
   gem 'coveralls', require: false
   gem 'timecop'
   gem 'shoulda-matchers'

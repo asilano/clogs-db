@@ -201,11 +201,11 @@ describe 'MailShots' do
         click_button 'Send'
 
         # Check we email all the Ians in forename and email. Expect case insensitivity
-        matching = [0, 1, 4, 5, 7].map { |n| members[n] }
+        matching = [0, 1, 4, 5, 7].map { |n| members[n] }.sort_by(&:email)
         expect(Delayed::Worker.new.work_off).to eq [1, 0]
         expect(all_emails.count).to eq matching.count
 
-        matching.zip(all_emails) do |row|
+        matching.zip(all_emails.sort_by(&:to)) do |row|
           member = row[0]
           email = row[1]
           expect(email.to).to eq [member.email]

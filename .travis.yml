@@ -3,8 +3,6 @@ addons:
   firefox: "41.0"
 sudo: false
 cache: bundler
-rvm:
-  - 1.9.3
 env:
   - DEVISE_SECRET=c0ffee MAIL_SERV=example.com MAIL_PORT=587 MAIL_DOM=example.com MAIL_USER=foo MAIL_PASS=foo ADMIN_EMAIL=foo@example.com SOCIETY_EMAIL="CLOGS <clogs@example.com>"
 script:
