@@ -38,4 +38,4 @@
       = file_field_tag 'attachments[]', multiple: true, id: 'attachments'
       %span On most browsers, you can select multiple files (from the same folder) to send as attachments
   .actions
-    = submit_tag 'Send', disable_with: 'Sending...'
+    = submit_tag 'Send', data: { disable_with: 'Sending...' }

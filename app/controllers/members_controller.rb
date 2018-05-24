@@ -1,7 +1,8 @@
 class MembersController < ApplicationController
-
   # Can't do anything unless signed in
   before_filter :authenticate_user!
+
+  before_action :set_member, only: %i[show edit update toggle_paid destroy]
 
   # GET /members
   # GET /members.json
@@ -17,8 +18,6 @@ class MembersController < ApplicationController
   # GET /members/1
   # GET /members/1.json
   def show
-    @member = Member.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @member }
@@ -38,7 +37,6 @@ class MembersController < ApplicationController
 
   # GET /members/1/edit
   def edit
-    @member = Member.find(params[:id])
   end
 
   # POST /members
@@ -60,8 +58,6 @@ class MembersController < ApplicationController
   # PUT /members/1
   # PUT /members/1.json
   def update
-    @member = Member.find(params[:id])
-
     respond_to do |format|
       if @member.update_attributes(params[:member])
         format.html { redirect_to @member, notice: 'Member was successfully updated.' }
@@ -74,7 +70,6 @@ class MembersController < ApplicationController
   end
 
   def toggle_paid
-    @member = Member.find params[:id]
     case params[:fee]
     when 'subs'
       @member.subs_paid = !@member.subs_paid
@@ -95,12 +90,17 @@ class MembersController < ApplicationController
   # DELETE /members/1
   # DELETE /members/1.json
   def destroy
-    @member = Member.find(params[:id])
     @member.destroy
 
     respond_to do |format|
       format.html { redirect_to members_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+
+  def set_member
+    @member = Member.friendly.find(params[:id])
   end
 end

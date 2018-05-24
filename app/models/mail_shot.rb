@@ -27,39 +27,20 @@ class MailShot
       next unless recpt.email =~ EMAIL_PATTERN
 
       body = merge_body recpt
-      body += footer_text
-      mail = ActionMailer::Base.mail from: ENV['SOCIETY_EMAIL'], to: recpt.email, subject: @subject
-      if @attachments
-        mail.content_type = 'multipart/mixed'
-        mail.part content_type: 'text/plain', body: body
-        @attachments.each do |attach|
-          mail.attachments[attach.filename] = { mime_type: attach.mime_type, content: attach.data }
-        end
-      else
-        mail.body body
-      end
-      mail.deliver
+      MailShotsMailer.mail_shot(subject: @subject,
+                                to: recpt.email,
+                                body: body,
+                                reply_to_addr: @reply_to,
+                                attaches: @attachments || []).deliver
     end
   rescue => e
     Rails.logger.info e
     Rails.logger.info e.backtrace
   end
 
-private
+  private
+
   def merge_body(member)
     MERGE_FIELDS.inject(@body) { |body, field| body.gsub "<#{field}>", member.send(field).to_s }
-  end
-
-  def footer_text
-    "
-
-----
-
-If you wish to reply to the sender of this email, please reply leaving the following line intact:
-RMID: #{Base64.encode64(@reply_to).chomp}
-
-This is the mailing list of CLOGS Musical Theatre, Chippenham.
-You are receiving this email because we believe you have a legitimate interest in its contents.
-If you wish to unsubscribe from this list, or to have your details removed from our database entirely, please email dbadmin@chippenham-clogs.co.uk."
   end
 end

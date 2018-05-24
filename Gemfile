@@ -1,7 +1,10 @@
 source 'https://rubygems.org'
 
 ruby '2.0.0'
-gem 'rails', '~> 3.2.1'
+gem 'rails', '~> 4.0.0'
+
+# Stop-gap until app is basically running
+gem 'protected_attributes'
 
 # Peg versions compatible with ruby 1.9.3
 gem 'rake', '~> 10.4.0'
@@ -14,15 +17,14 @@ gem 'addressable', '~> 2.3.0'
 # Peg pg to version supported by Ruby 1.9.3
 gem 'pg', '~> 0.18.0'
 
-
 # Gems used only for assets and not required
 # in production environments by default.
 #group :assets do
-  gem 'sass', '~> 3.1.0'
-  gem 'sass-rails',   '~> 3.2.3'
+  gem 'sass'
+  gem 'sass-rails'
   gem 'compass-rails'
   gem 'sassy-buttons'
-  gem 'coffee-rails', '~> 3.2.1'
+  gem 'coffee-rails'
   gem 'modernizr-rails'
 
 
@@ -37,6 +39,8 @@ group :development, :test do
 
   # Use thin web-server in dev
   gem 'thin'
+
+  gem 'byebug'
 end
 
 group :development do
@@ -53,7 +57,9 @@ group :test do
   gem "capybara", '~> 2.3.0'
 
   # Peg selenium. Plan to replace it with webkit
-  gem 'selenium-webdriver', '2.53.4'
+  #gem 'selenium-webdriver', '2.53.4'
+  gem 'capybara-webkit'
+  gem 'transactional_capybara'
   gem 'coveralls', require: false
   gem 'timecop'
   gem 'shoulda-matchers'
@@ -87,7 +93,8 @@ gem 'andand'
 gem 'figaro'
 
 # User authentication by devise
-gem 'devise'
+# Peg version to work with ruby 2.0
+gem 'devise', "3.5.10"
 
 # Squeel - simpler SQL queries through AREL
 gem 'squeel'
@@ -104,7 +111,7 @@ gem "workless", "~> 1.1.3", :group => :production
 gem 'uk_phone_numbers'
 
 # To provide friendly URLs
-gem 'friendly_id', '~> 4.0.10'
+gem 'friendly_id'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
