@@ -20,7 +20,7 @@ describe 'MailShots' do
   end
 
   describe "while logged in" do
-      footer = /\n\n----\n\nIf you wish to reply to the sender of this email, please reply leaving the following line intact:\nRMID: ([a-zA-Z0-9]+=*)\n\nThis is the mailing list of CLOGS Musical Theatre, Chippenham.\nYou are receiving this email because we believe you have a legitimate interest in its contents.\nIf you wish to unsubscribe from this list, or to have your details removed from our database entirely, please email dbadmin@chippenham-clogs.co.uk.$/
+      footer = /\n\n----\n\nIf you wish to reply to the sender of this email, please reply leaving the following line intact:\nRMID: ([a-zA-Z0-9]+=*)\n\nThis is the mailing list of CLOGS Musical Theatre, Chippenham.\nYou are receiving this email because we believe you have a legitimate interest in its contents.\nIf you wish to unsubscribe from this list, or to have your details removed from our database entirely, please email chowlett09@gmail.com.$/
 
     let(:user) { FactoryGirl.create(:user) }
     before(:each) do
