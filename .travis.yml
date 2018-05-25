@@ -6,7 +6,8 @@ cache: bundler
 env:
   - DEVISE_SECRET=c0ffee MAIL_SERV=example.com MAIL_PORT=587 MAIL_DOM=example.com MAIL_USER=foo MAIL_PASS=foo ADMIN_EMAIL=foo@example.com SOCIETY_EMAIL="CLOGS <clogs@example.com>"
 script:
-  - RAILS_ENV=test xvfb-run --server-args="-screen 0 1024x768x24" bundle exec rake db:migrate spec
+  - RAILS_ENV=test bundle exec rake db:migrate spec
+  - xvfb-run --server-args="-screen 0 1024x768x24" bundle exec rspec spec --tag ~js
 before_script:
   - cp config/database.travis.yml config/database.yml
   - psql -c 'create database clogs_db_test' -U postgres
