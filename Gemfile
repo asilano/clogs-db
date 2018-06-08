@@ -54,11 +54,11 @@ group :test do
   gem "database_cleaner"
   gem "email_spec"
   gem "launchy"
-  gem "capybara", '~> 2.3.0'
+  gem "capybara"
 
-  # Peg selenium. Plan to replace it with webkit
-  #gem 'selenium-webdriver', '2.53.4'
-  gem 'capybara-webkit'
+  gem 'selenium-webdriver'
+  gem 'capybara-selenium'
+  gem 'chromedriver-helper'
   gem 'transactional_capybara'
   gem 'coveralls', require: false
   gem 'timecop'

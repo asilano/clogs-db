@@ -4,6 +4,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'capybara/rspec'
 require 'transactional_capybara/rspec'
+require 'selenium/webdriver'
 require 'rspec/autorun'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -48,7 +49,28 @@ RSpec.configure do |config|
   config.include ActionView::Helpers::TextHelper
 end
 
-Capybara.javascript_driver = :webkit
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
+end
+
+Capybara.register_driver :headless_chrome do |app|
+  # capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+  #   chromeOptions: { args: %w(headless disable-gpu no-sandbox disable-dev-shm-usage) }
+  # )
+
+  # Capybara::Selenium::Driver.new app,
+  #   browser: :chrome,
+  #   desired_capabilities: capabilities
+  options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', 'disable-gpu', 'no-sandbox'])
+
+  Capybara::Selenium::Driver.new(
+      app,
+      browser: :chrome,
+      options: options
+  )
+end
+
+Capybara.javascript_driver = :headless_chrome
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|

@@ -5,15 +5,10 @@ sudo: false
 cache: bundler
 env:
   - DEVISE_SECRET=c0ffee MAIL_SERV=example.com MAIL_PORT=587 MAIL_DOM=example.com MAIL_USER=foo MAIL_PASS=foo ADMIN_EMAIL=foo@example.com SOCIETY_EMAIL="CLOGS <clogs@example.com>"
-before_install:
-  - sudo apt-add-repository --yes ppa:beineri/opt-qt551-trusty
-  - sudo apt-get -qq update
 install:
-  - sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
   - bundle install
-script:
-  - RAILS_ENV=test bundle exec rake db:migrate spec
-  - xvfb-run --server-args="-screen 0 1024x768x24" bundle exec rspec spec --tag ~js
 before_script:
   - cp config/database.travis.yml config/database.yml
   - psql -c 'create database clogs_db_test' -U postgres
+script:
+  - RAILS_ENV=test bundle exec rake db:migrate spec

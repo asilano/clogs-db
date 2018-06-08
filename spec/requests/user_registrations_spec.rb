@@ -259,7 +259,7 @@ describe "approvals" do
       expect(page).to have_css('td', text: user.email)
     end
     [admin, assistant].each do |user|
-      expect(page).not_to have_content('td', text: user.email)
+      expect(page).not_to have_css('td', text: user.email)
     end
   end
 
