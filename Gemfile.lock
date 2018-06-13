@@ -167,8 +167,6 @@ GEM
     pg (0.18.4)
     polyamorous (1.1.0)
       activerecord (>= 3.0)
-    protected_attributes (1.1.4)
-      activemodel (>= 4.0.1, < 5.0)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.5.5)
@@ -328,7 +326,6 @@ DEPENDENCIES
   modernizr-rails
   nokogiri (~> 1.6.0)
   pg (~> 0.18.0)
-  protected_attributes
   quiet_assets
   rack-cache (~> 1.2.0)
   rails (~> 4.0.0)

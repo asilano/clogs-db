@@ -47,7 +47,7 @@ class MailingListsController < ApplicationController
   # POST /mailing_lists.json
   def create
     params[:mailing_list].delete(:query) if params[:suppress_query_form]
-    @list = MailingList.new(params[:mailing_list])
+    @list = MailingList.new(mailing_list_params)
 
     respond_to do |format|
       if @list.save
@@ -67,7 +67,7 @@ class MailingListsController < ApplicationController
     @list = MailingList.find(params[:id])
 
     respond_to do |format|
-      if @list.update_attributes(params[:mailing_list])
+      if @list.update_attributes(mailing_list_params)
         format.html { redirect_to @list, notice: 'Mailing List was successfully updated.' }
         format.json { head :no_content }
       else
@@ -86,6 +86,14 @@ class MailingListsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to mailing_lists_url }
       format.json { head :no_content }
+    end
+  end
+
+  private
+
+  def mailing_list_params
+    params.require(:mailing_list).permit(:name, member_ids: []).tap do |whitelisted|
+      whitelisted[:query] = params[:mailing_list][:query] if params[:mailing_list].key? :query
     end
   end
 end

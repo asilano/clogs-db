@@ -1,5 +1,4 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-
   before_filter -> { authenticate_user! force: true }, only: [:index, :approve]
 
   def index

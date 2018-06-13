@@ -3,9 +3,6 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 gem 'rails', '~> 4.0.0'
 
-# Stop-gap until app is basically running
-gem 'protected_attributes'
-
 # Peg versions compatible with ruby 1.9.3
 gem 'rake', '~> 10.4.0'
 gem 'rack-cache', '~> 1.2.0'

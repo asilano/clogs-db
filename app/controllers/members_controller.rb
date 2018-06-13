@@ -42,7 +42,7 @@ class MembersController < ApplicationController
   # POST /members
   # POST /members.json
   def create
-    @member = Member.new(params[:member])
+    @member = Member.new(member_params)
 
     respond_to do |format|
       if @member.save
@@ -59,7 +59,7 @@ class MembersController < ApplicationController
   # PUT /members/1.json
   def update
     respond_to do |format|
-      if @member.update_attributes(params[:member])
+      if @member.update_attributes(member_params)
         format.html { redirect_to @member, notice: 'Member was successfully updated.' }
         format.json { head :no_content }
       else
@@ -102,5 +102,27 @@ class MembersController < ApplicationController
 
   def set_member
     @member = Member.friendly.find(params[:id])
+  end
+
+  def member_params
+    params.require(:member).permit(:addr1,
+                                   :addr2,
+                                   :addr3,
+                                   :concert_fee_paid,
+                                   :county,
+                                   :email,
+                                   :forename,
+                                   :membership,
+                                   :mobile,
+                                   :phone,
+                                   :postcode,
+                                   :show_fee_paid,
+                                   :subs_paid,
+                                   :surname,
+                                   :town,
+                                   :voice,
+                                   :notes,
+                                   :join_year,
+                                   mailing_list_ids: [])
   end
 end

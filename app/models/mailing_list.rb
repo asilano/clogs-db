@@ -1,5 +1,4 @@
 class MailingList < ActiveRecord::Base
-  attr_accessible :name, :member_ids, :query
   serialize :query, Hash
 
   validates_presence_of :name

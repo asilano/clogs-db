@@ -23,7 +23,7 @@ describe MembersController do
   # This should return the minimal set of attributes required to create a valid
   # Member. As you add validations to Member, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { }
+  let(:valid_attributes) { { forename: 'John', surname: 'Smith' } }
 
 
   describe "while logged out" do
