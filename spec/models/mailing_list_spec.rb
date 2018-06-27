@@ -7,7 +7,7 @@ describe MailingList do
     end
 
     it "validates uniqueness of name" do
-      FactoryGirl.create(:mailing_list)
+      FactoryBot.create(:mailing_list)
       expect(subject).to validate_uniqueness_of :name
     end
   end

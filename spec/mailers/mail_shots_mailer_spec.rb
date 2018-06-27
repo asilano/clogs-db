@@ -9,9 +9,9 @@ describe MailShotsMailer do
                                        body: 'This is my body',
                                        reply_to_addr: 'from@example.org',
                                        attaches: [])
-      mail.subject.should eq('Test subject')
-      mail.to.should eq(['to@example.org'])
-      mail.from.should eq(['clogs@example.com'])
+      expect(mail.subject).to eq('Test subject')
+      expect(mail.to).to eq(['to@example.org'])
+      expect(mail.from).to eq(['clogs@example.com'])
     end
 
     it "renders the body" do
@@ -20,8 +20,8 @@ describe MailShotsMailer do
                                        body: 'This is my body',
                                        reply_to_addr: 'from@example.org',
                                        attaches: [])
-      mail.body.encoded.should match('This is my body')
-      mail.body.encoded.should match("RMID: #{Base64.encode64('from@example.org').chomp}")
+      expect(mail.body.encoded).to match('This is my body')
+      expect(mail.body.encoded).to match("RMID: #{Base64.encode64('from@example.org').chomp}")
     end
 
     it 'handles attachments' do
@@ -36,13 +36,13 @@ describe MailShotsMailer do
                                                                            'pretend-this-is-an-image',
                                                                            'image/png')
                                                  ])
-      mail.attachments.should have(2).attachments
+      expect(mail.attachments.size).to eq 2
       attachment = mail.attachments[0]
-      attachment.content_type.should start_with('text/plain')
-      attachment.filename.should == 'file.txt'
+      expect(attachment.content_type).to start_with('text/plain')
+      expect(attachment.filename).to eq 'file.txt'
       attachment = mail.attachments[1]
-      attachment.content_type.should start_with('image/png')
-      attachment.filename.should == 'image.png'
+      expect(attachment.content_type).to start_with('image/png')
+      expect(attachment.filename).to eq 'image.png'
     end
   end
 

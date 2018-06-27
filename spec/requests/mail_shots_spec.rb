@@ -22,7 +22,7 @@ describe 'MailShots' do
   describe "while logged in" do
       footer = /\n\n----\n\nIf you wish to reply to the sender of this email, please reply leaving the following line intact:\nRMID: ([a-zA-Z0-9]+=*)\n\nThis is the mailing list of CLOGS Musical Theatre, Chippenham.\nYou are receiving this email because we believe you have a legitimate interest in its contents.\nIf you wish to unsubscribe from this list, or to have your details removed from our database entirely, please email chowlett09@gmail.com.$/
 
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     before(:each) do
       visit new_user_session_path
       fill_in 'Email', with: user.email
@@ -31,15 +31,15 @@ describe 'MailShots' do
     end
 
     before(:each) do
-      @mailing_list = FactoryGirl.create(:mailing_list)
-      @sub_list = FactoryGirl.create(:small_mailing_list)
-      @empty_list = FactoryGirl.create(:mailing_list, name: 'Empty List')
-      @simple_dynamic_list = FactoryGirl.create(:simple_dynamic_list)
-      @complex_dynamic_list = FactoryGirl.create(:complex_dynamic_list)
+      @mailing_list = FactoryBot.create(:mailing_list)
+      @sub_list = FactoryBot.create(:small_mailing_list)
+      @empty_list = FactoryBot.create(:mailing_list, name: 'Empty List')
+      @simple_dynamic_list = FactoryBot.create(:simple_dynamic_list)
+      @complex_dynamic_list = FactoryBot.create(:complex_dynamic_list)
 
-      @member1 = FactoryGirl.create(:member, forename: 'John', surname: 'Smith', email: 'j.smith@example.com')
-      @member2 = FactoryGirl.create(:member, forename: 'Jane', surname: 'Doe', email: 'janed@example.com')
-      @member3 = FactoryGirl.create(:member, forename: 'Bob', surname: 'Patron', email: 'patronb@example.com')
+      @member1 = FactoryBot.create(:member, forename: 'John', surname: 'Smith', email: 'j.smith@example.com')
+      @member2 = FactoryBot.create(:member, forename: 'Jane', surname: 'Doe', email: 'janed@example.com')
+      @member3 = FactoryBot.create(:member, forename: 'Bob', surname: 'Patron', email: 'patronb@example.com')
 
       @member1.mailing_lists = [@mailing_list, @sub_list]
       @member2.mailing_lists = [@mailing_list]
@@ -532,6 +532,7 @@ EOD
 
       it "should allow multiple attachements to be chosen" do
         pending 'Capybara support for multiple uploads'
+        fail
       end
 
       it "should include a single attachment in queued job" do
@@ -546,6 +547,7 @@ EOD
 
       it "should include multiple attachments in queued job" do
         pending 'Capybara support for multiple uploads'
+        fail
       end
 
       it "should send single attachment" do
@@ -564,7 +566,7 @@ EOD
           expect(email.to).to eq [member.email]
           expect(email.subject).to eq 'Test email'
           expect(email.text_part.body).to include "Hello,\n\nThis is a test email."
-          expect(email.attachments).to have(1).file
+          expect(email.attachments.size).to eq 1
           att = email.attachments[0]
           expect(att.filename).to eq File.basename files[0]
           expect(att.body.decoded).to eq File.read files[0]
@@ -573,12 +575,14 @@ EOD
 
       it "should send multiple attachments" do
         pending 'Capybara support for multiple uploads'
+        fail
       end
 
       it "should error if single attachment is unavailable"
 
       it "should error on all unavailable attachments" do
         pending 'Capybara support for multiple uploads'
+        fail
       end
     end
   end

@@ -7,7 +7,7 @@ describe "UserRegistrations" do
   end
 
   it "processes sign-up" do
-    user = FactoryGirl.build(:user)
+    user = FactoryBot.build(:user)
     visit '/'
     click_link 'Sign up'
     fill_in 'Email', with: user.email
@@ -20,7 +20,7 @@ describe "UserRegistrations" do
 
 if false
   describe "validation errors on create" do
-    let(:user) { FactoryGirl.build(:user) }
+    let(:user) { FactoryBot.build(:user) }
     before(:each) do
       visit new_user_registration_path
     end
@@ -109,7 +109,7 @@ if false
   end
 
   describe "edit registrations" do
-    let(:user) { FactoryGirl.create(:confirmed_user) }
+    let(:user) { FactoryBot.create(:confirmed_user) }
     before(:each) { login user }
 
     it "should be linked from the homepage" do
@@ -207,7 +207,7 @@ if false
     self.use_transactional_fixtures = false
 
     it "should allow the user to destroy their account" do
-      leaving_user = FactoryGirl.create(:confirmed_user)
+      leaving_user = FactoryBot.create(:confirmed_user)
       login leaving_user
       visit edit_user_registration_path
       click_button 'Delete my account'
@@ -222,10 +222,10 @@ end
 end
 
 describe "approvals" do
-  let!(:admin) { FactoryGirl.create(:user) }
-  let!(:chair) { FactoryGirl.create(:user, approved: false) }
-  let!(:assistant) { FactoryGirl.create(:user) }
-  let!(:evil) { FactoryGirl.create(:user, approved: false) }
+  let!(:admin) { FactoryBot.create(:user) }
+  let!(:chair) { FactoryBot.create(:user, approved: false) }
+  let!(:assistant) { FactoryBot.create(:user) }
+  let!(:evil) { FactoryBot.create(:user, approved: false) }
 
   before(:each) do
     visit new_user_session_path

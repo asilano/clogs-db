@@ -3,10 +3,7 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 gem 'rails', '~> 4.0.0'
 
-# Peg versions compatible with ruby 1.9.3
-gem 'rake', '~> 10.4.0'
-gem 'rack-cache', '~> 1.2.0'
-gem 'addressable', '~> 2.3.0'
+gem 'rack-cache'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -29,8 +26,8 @@ gem 'pg', '~> 0.18.0'
 #end
 
 group :development, :test do
-  gem "rspec-rails", '~> 2.14.0'
-  gem "factory_girl_rails"
+  gem "rspec-rails"
+  gem "factory_bot_rails"
   gem "spork-rails"
   gem 'coffee-script-source', '1.8.0'
 

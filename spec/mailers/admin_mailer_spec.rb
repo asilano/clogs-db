@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe AdminMailer do
   describe "approval_needed" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     let(:mail) { AdminMailer.approval_needed(user) }
 
     it "renders the headers" do

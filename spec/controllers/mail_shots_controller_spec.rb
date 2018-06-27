@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe MailShotsController do
-  let(:mailing_list) { FactoryGirl.create(:mailing_list) }
+  let(:mailing_list) { FactoryBot.create(:mailing_list) }
   let(:valid_attributes) { {mailing_list_id: mailing_list.id.to_s, subject: 'Test', body: "Hello"} }
 
   describe "while logged out" do
@@ -31,12 +31,12 @@ describe MailShotsController do
   end
 
   describe "while logged in" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
 
     before(:each) do
       sign_in user
       @mock_delay = double('mock_delay').as_null_object
-      MailShot.any_instance.stub(:delay).and_return @mock_delay
+      allow_any_instance_of(MailShot).to receive(:delay).and_return @mock_delay
     end
 
     describe "GET new" do

@@ -28,7 +28,7 @@ describe "MailingLists" do
 
     describe "GET /mailing_lists/:id/edit" do
       it "redirects to login path" do
-        mailing_list = FactoryGirl.create(:mailing_list)
+        mailing_list = FactoryBot.create(:mailing_list)
         get edit_mailing_list_path(mailing_list)
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
@@ -37,7 +37,7 @@ describe "MailingLists" do
 
     describe "GET /mailing_lists/:id" do
       it "redirects to login path" do
-        mailing_list = FactoryGirl.create(:mailing_list)
+        mailing_list = FactoryBot.create(:mailing_list)
         get mailing_list_path(mailing_list)
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
@@ -46,7 +46,7 @@ describe "MailingLists" do
 
     describe "PUT /mailing_lists/:id" do
       it "redirects to login path" do
-        mailing_list = FactoryGirl.create(:mailing_list)
+        mailing_list = FactoryBot.create(:mailing_list)
         put mailing_list_path(mailing_list), {name: 'Jane\'s list'}
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
@@ -55,7 +55,7 @@ describe "MailingLists" do
 
     describe "DELETE /mailing_lists/:id" do
       it "redirects to login path" do
-        mailing_list = FactoryGirl.create(:mailing_list)
+        mailing_list = FactoryBot.create(:mailing_list)
         delete mailing_list_path(mailing_list)
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
@@ -64,7 +64,7 @@ describe "MailingLists" do
   end
 
   describe "(while logged in)" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     before(:each) do
       visit new_user_session_path
       fill_in 'Email', with: user.email
@@ -73,16 +73,16 @@ describe "MailingLists" do
     end
 
     before(:each) do
-      @mailing_list = FactoryGirl.create(:mailing_list)
-      @sub_list = FactoryGirl.create(:small_mailing_list)
-      @empty_list = FactoryGirl.create(:mailing_list, name: 'Empty List')
-      @simple_dynamic_list = FactoryGirl.create(:simple_dynamic_list)
-      @complex_dynamic_list = FactoryGirl.create(:complex_dynamic_list)
-      @list_difference_list = FactoryGirl.create(:list_difference)
+      @mailing_list = FactoryBot.create(:mailing_list)
+      @sub_list = FactoryBot.create(:small_mailing_list)
+      @empty_list = FactoryBot.create(:mailing_list, name: 'Empty List')
+      @simple_dynamic_list = FactoryBot.create(:simple_dynamic_list)
+      @complex_dynamic_list = FactoryBot.create(:complex_dynamic_list)
+      @list_difference_list = FactoryBot.create(:list_difference)
 
-      @member1 = FactoryGirl.create(:member, forename: 'John', surname: 'Smith')
-      @member2 = FactoryGirl.create(:member, forename: 'Jane', surname: 'Doe')
-      @member3 = FactoryGirl.create(:member, forename: 'Bob', surname: 'Patron')
+      @member1 = FactoryBot.create(:member, forename: 'John', surname: 'Smith')
+      @member2 = FactoryBot.create(:member, forename: 'Jane', surname: 'Doe')
+      @member3 = FactoryBot.create(:member, forename: 'Bob', surname: 'Patron')
 
       @member1.mailing_lists = [@mailing_list, @sub_list]
       @member2.mailing_lists = [@mailing_list]

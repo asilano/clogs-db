@@ -106,7 +106,7 @@ describe MailingListsController do
   end
 
   describe "while logged in" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
 
     before(:each) do
       sign_in user

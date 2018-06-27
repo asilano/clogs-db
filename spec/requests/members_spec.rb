@@ -28,7 +28,7 @@ describe "Members" do
 
     describe "GET /members/:id/edit" do
       it "redirects to login path" do
-        member = FactoryGirl.create(:member)
+        member = FactoryBot.create(:member)
         get edit_member_path(member)
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
@@ -37,7 +37,7 @@ describe "Members" do
 
     describe "GET /members/:id" do
       it "redirects to login path" do
-        member = FactoryGirl.create(:member)
+        member = FactoryBot.create(:member)
         get member_path(member)
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
@@ -46,7 +46,7 @@ describe "Members" do
 
     describe "PUT /members/:id" do
       it "redirects to login path" do
-        member = FactoryGirl.create(:member)
+        member = FactoryBot.create(:member)
         put member_path(member), {forename: 'Jane'}
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
@@ -55,7 +55,7 @@ describe "Members" do
 
     describe "DELETE /members/:id" do
       it "redirects to login path" do
-        member = FactoryGirl.create(:member)
+        member = FactoryBot.create(:member)
         delete member_path(member)
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
@@ -64,7 +64,7 @@ describe "Members" do
   end
 
   describe "while logged in" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     before(:each) do
       visit new_user_session_path
       fill_in 'Email', with: user.email
@@ -73,11 +73,11 @@ describe "Members" do
     end
 
     before(:each) do
-      @list_one = FactoryGirl.create(:mailing_list, name: 'First list')
-      @list_two = FactoryGirl.create(:mailing_list, name: 'Second list')
-      @list_three = FactoryGirl.create(:mailing_list, name: 'Third list')
-      @member = FactoryGirl.create(:member)
-      @wife = FactoryGirl.create(:members_wife)
+      @list_one = FactoryBot.create(:mailing_list, name: 'First list')
+      @list_two = FactoryBot.create(:mailing_list, name: 'Second list')
+      @list_three = FactoryBot.create(:mailing_list, name: 'Third list')
+      @member = FactoryBot.create(:member)
+      @wife = FactoryBot.create(:members_wife)
     end
 
     describe "GET /members" do
@@ -174,8 +174,8 @@ describe "Members" do
         members = details.map { |member| Member.create member }
         expect(Member.count).to eq details.size
 
-        @simple_dynamic_list = FactoryGirl.create(:simple_dynamic_list)   # Ians
-        @complex_dynamic_list = FactoryGirl.create(:complex_dynamic_list) # Patrons
+        @simple_dynamic_list = FactoryBot.create(:simple_dynamic_list)   # Ians
+        @complex_dynamic_list = FactoryBot.create(:complex_dynamic_list) # Patrons
 
         visit member_path(members[0].id)
         expect(page).to have_css('li a', text: @simple_dynamic_list.name)
@@ -233,6 +233,7 @@ describe "Members" do
 
       it "redisplays the create form with invalid params" do
         pending "Validations on Member"
+        fail
       end
     end
 
@@ -259,6 +260,7 @@ describe "Members" do
 
       it "redisplays the edit form with invalid params" do
         pending "validations on Member"
+        fail
       end
     end
 
@@ -270,12 +272,12 @@ describe "Members" do
         page.find('tr', text: @member.voice).first('a span.icon-cross').first(:xpath, './/..').click
 
         expect(page.all('a span.icon-cross').count).to eq 2
-        expect(Member.find(@member).subs_paid).to be_true
-        expect(Member.find(@member).show_fee_paid).to be_true
-        expect(Member.find(@member).concert_fee_paid).to be_true
-        expect(Member.find(@wife).subs_paid).to be_true
-        expect(Member.find(@wife).show_fee_paid).to be_false
-        expect(Member.find(@wife).concert_fee_paid).to be_false
+        expect(Member.find(@member).subs_paid).to be true
+        expect(Member.find(@member).show_fee_paid).to be true
+        expect(Member.find(@member).concert_fee_paid).to be true
+        expect(Member.find(@wife).subs_paid).to be true
+        expect(Member.find(@wife).show_fee_paid).to be false
+        expect(Member.find(@wife).concert_fee_paid).to be false
       end
 
       it "with javascript", js: true do
@@ -285,12 +287,12 @@ describe "Members" do
         page.find('tr', text: @member.voice).first('a span.icon-cross').first(:xpath, './/..').click
 
         expect(page).to have_selector('a span.icon-cross', count: 2)
-        expect(Member.find(@member).subs_paid).to be_true
-        expect(Member.find(@member).show_fee_paid).to be_true
-        expect(Member.find(@member).concert_fee_paid).to be_true
-        expect(Member.find(@wife).subs_paid).to be_true
-        expect(Member.find(@wife).show_fee_paid).to be_false
-        expect(Member.find(@wife).concert_fee_paid).to be_false
+        expect(Member.find(@member).subs_paid).to be true
+        expect(Member.find(@member).show_fee_paid).to be true
+        expect(Member.find(@member).concert_fee_paid).to be true
+        expect(Member.find(@wife).subs_paid).to be true
+        expect(Member.find(@wife).show_fee_paid).to be false
+        expect(Member.find(@wife).concert_fee_paid).to be false
       end
     end
 
