@@ -20,7 +20,7 @@
             Hold &lt;Ctrl&gt; to select/deselect multiple members.
             %br
             Hold &lt;Shift&gt; to select/deselect a range of members.
-          = f.collection_select :member_ids, Member.name_order, :id, :fullname, {include_blank: 'None'}, multiple: true, size: [25, Member.count].min
+          = f.collection_select :member_ids, Member.name_order, :id, :fullname, {include_blank: 'None'}, multiple: true, size: [25, (Member.count + 1)].min
       .column
         %fieldset
           .head The query below will determine which members to include when a mail shot is created

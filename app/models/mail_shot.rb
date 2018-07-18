@@ -31,7 +31,7 @@ class MailShot
                                 to: recpt.email,
                                 body: body,
                                 reply_to_addr: @reply_to,
-                                attaches: @attachments || []).deliver
+                                attaches: @attachments || []).deliver_now
     end
   rescue => e
     Rails.logger.info e

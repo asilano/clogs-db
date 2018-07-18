@@ -487,13 +487,13 @@ describe "MailingLists" do
         page.unselect "#{@member1.forename} #{@member1.surname}", from: 'Members'
         page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
         click_button 'Save'
-        expect(MailingList.find(@sub_list).members).to match_array [@member2, @member3]
+        expect(MailingList.find(@sub_list.id).members).to match_array [@member2, @member3]
 
         click_link 'Edit'
         page.unselect "#{@member2.forename} #{@member2.surname}", from: 'Members'
         page.unselect "#{@member3.forename} #{@member3.surname}", from: 'Members'
         click_button 'Save'
-        expect(MailingList.find(@sub_list).members).to be_empty
+        expect(MailingList.find(@sub_list.id).members).to be_empty
       end
 
       it "allows definition of dynamic query", js: true do

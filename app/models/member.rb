@@ -4,7 +4,7 @@ class Member < ActiveRecord::Base
 
   has_and_belongs_to_many :mailing_lists
 
-  validate :surname, :forename, presence: true
+  validates :surname, :forename, presence: true
 
   scope :name_order, -> { order('surname, forename') }
 
@@ -37,11 +37,18 @@ class Member < ActiveRecord::Base
   # Search pseudo-fields
   ransacker :full_name do |parent|
     Arel::Nodes::NamedFunction.new('concat_ws',
-      [' ', parent.table[:forename], parent.table[:surname]])
+      [Arel::Nodes.build_quoted(' '), parent.table[:forename], parent.table[:surname]])
   end
 
   ransacker :address do |parent|
-    Arel::Nodes::NamedFunction.new('concat_ws', [', ', *([:addr1, :addr2, :addr3, :town, :county, :postcode].map { |col| parent.table[col] })])
+    Arel::Nodes::NamedFunction.new('concat_ws',
+                                   [Arel::Nodes.build_quoted(', '),
+                                    *([:addr1,
+                                       :addr2,
+                                       :addr3,
+                                       :town,
+                                       :county,
+                                       :postcode].map { |col| parent.table[col] })])
   end
 
   def self.ransackable_attributes(auth_object = nil)

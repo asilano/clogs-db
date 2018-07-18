@@ -10,9 +10,12 @@
     %th Fixed members:
     %td
       = check_box_hack pluralize(@list.members.count, 'member') + " (of #{Member.count} total)", "members_list" do
-        - @list.members.name_order.each do |member|
-          = link_to(member.fullname, member_path(member))
-          %br
+        - if @list.members.present?
+          - @list.members.name_order.each do |member|
+            = link_to(member.fullname, member_path(member))
+            %br
+        - else
+          No fixed members
   %tr
     %th Varying members:
     %td
@@ -21,9 +24,12 @@
         - dynamic_members = Member.search(@list.query).result
         .member-list
           = check_box_hack "Currently " + pluralize(dynamic_members.count, 'member') + " (of #{Member.count} total)", "dyn_members_list" do
-            - dynamic_members.name_order.each do |member|
-              = link_to(member.fullname, member_path(member))
-              %br
+            - if dynamic_members.present?
+              - dynamic_members.name_order.each do |member|
+                = link_to(member.fullname, member_path(member))
+                %br
+            - else
+              No varying members
 %div
   = icon_link 'envelope', new_mail_shot_path(@list)
   = link_to 'Email this list', new_mail_shot_path(@list)

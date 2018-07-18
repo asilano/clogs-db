@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   after_create :send_admin_mail
 
   def send_admin_mail
-    AdminMailer.approval_needed(self).deliver
+    AdminMailer.approval_needed(self).deliver_now
   end
 
   def active_for_authentication?

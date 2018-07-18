@@ -61,6 +61,7 @@ describe 'MailShots' do
       it "should be accessible via Mailing List index" do
         visit mailing_lists_path
         page.first('a .icon-envelope').find(:xpath, '..').click
+
         expect(page).to have_select(:mailing_list_id, selected: MailingList.first.name)
         expect(page).to have_field :subject
         expect(page).to have_field :body
