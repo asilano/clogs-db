@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.0.0'
+ruby '2.2.10'
 gem 'rails', '~> 4.2.0'
 
 gem 'rack-cache'
@@ -99,7 +99,7 @@ gem 'ransack', '1.6.3'
 
 # Delayed job and manager for its workers
 gem "delayed_job_active_record"
-gem "workless", "~> 1.1.3", :group => :production
+gem "workless", :group => :production
 
 # To display phone numbers correctly
 gem 'uk_phone_numbers'
