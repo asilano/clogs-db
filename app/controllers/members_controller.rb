@@ -49,7 +49,7 @@ class MembersController < ApplicationController
         format.html { redirect_to @member, notice: 'Member was successfully created.' }
         format.json { render json: @member, status: :created, location: @member }
       else
-        format.html { render action: "new" }
+        format.html { render action: :new }
         format.json { render json: @member.errors, status: :unprocessable_entity }
       end
     end
@@ -63,7 +63,7 @@ class MembersController < ApplicationController
         format.html { redirect_to @member, notice: 'Member was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
+        format.html { render action: :edit }
         format.json { render json: @member.errors, status: :unprocessable_entity }
       end
     end
@@ -82,7 +82,7 @@ class MembersController < ApplicationController
 
     @toggled_id = "#{params[:fee]}-#{params[:id]}"
     respond_to do |format|
-      format.html { redirect_to action: 'index' }
+      format.html { redirect_to action: :index }
       format.js
     end
   end

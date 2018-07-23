@@ -18,7 +18,7 @@ class CreateMembers < ActiveRecord::Migration
       t.boolean :show_fee_paid
       t.boolean :concert_fee_paid
 
-      t.timestamps
+      t.timestamps null: true
     end
   end
 end

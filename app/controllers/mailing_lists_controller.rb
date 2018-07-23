@@ -54,7 +54,7 @@ class MailingListsController < ApplicationController
         format.html { redirect_to @list, notice: 'Mailing List was successfully created.' }
         format.json { render json: @list, status: :created, location: @list }
       else
-        format.html { render action: "new" }
+        format.html { render action: :new }
         format.json { render json: @list.errors, status: :unprocessable_entity }
       end
     end
@@ -71,7 +71,7 @@ class MailingListsController < ApplicationController
         format.html { redirect_to @list, notice: 'Mailing List was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
+        format.html { render action: :edit }
         format.json { render json: @list.errors, status: :unprocessable_entity }
       end
     end

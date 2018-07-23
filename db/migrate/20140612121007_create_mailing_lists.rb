@@ -3,7 +3,7 @@ class CreateMailingLists < ActiveRecord::Migration
     create_table :mailing_lists do |t|
       t.string :name, null: false
 
-      t.timestamps
+      t.timestamps null: true
     end
     add_index :mailing_lists, :name, :unique => true
   end

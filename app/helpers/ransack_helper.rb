@@ -1,16 +1,14 @@
 module RansackHelper
   def display_query(query, context = Member)
-    if query.empty?
-      return 'No query'
-    else
-      # Generate the search object, then render it
-      s = context.search(query)
+    return 'No query' if query.empty?
 
-      groups = s.groupings.map { |group| render_ransack_group(group, context) }
-      groups += s.conditions.map { |cond| render_ransack_condition(cond, context) }
+    # Generate the search object, then render it
+    s = context.search(query)
 
-      groups.join ' AND '
-    end
+    groups = s.groupings.map { |group| render_ransack_group(group, context) }
+    groups += s.conditions.map { |cond| render_ransack_condition(cond, context) }
+
+    groups.join ' AND '
   end
 
   def render_ransack_group(group, context)
@@ -31,7 +29,7 @@ module RansackHelper
   end
 
   def setup_search_form(builder)
-    fields = builder.grouping_fields builder.object.new_grouping, object_name: 'new_object_name', child_index: "new_grouping" do |f|
+    fields = builder.grouping_fields builder.object.new_grouping, object_name: 'new_object_name', child_index: 'new_grouping' do |f|
       render('ransack/grouping_fields', f: f)
     end
     content_for :document_ready, %Q{
@@ -64,14 +62,13 @@ module RansackHelper
   end
 
   def button_to_nest_fields(name, type)
-    button_tag name, :class => 'nest-fields', 'data-field-type' => type, title: "Add group"
+    button_tag name, :class => 'nest-fields', 'data-field-type' => type, title: 'Add group'
   end
 end
 
 module ActionView
   module Helpers
     class FormBuilder
-
       def search_fields_for(record_name, record_object = nil, fields_options = {}, &proc)
         fields_options, record_object = record_object, nil if record_object.is_a?(Hash) && record_object.extractable_options?
         record_object, record_name = record_name, nil if record_object.nil?
@@ -85,7 +82,7 @@ module ActionView
 
         if search.nil?
           raise ArgumentError,
-            "No Ransack::Search object was provided to search_form_for!"
+            'No Ransack::Search object was provided to search_form_for!'
         end
         record_name ||= 'q'.freeze
         fields_options[:builder] ||= Ransack::Helpers::FormBuilder

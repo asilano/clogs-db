@@ -11,24 +11,19 @@ gem 'rack-cache'
 # Peg pg to version supported by Ruby 1.9.3
 gem 'pg', '~> 0.18.0'
 
-# Gems used only for assets and not required
-# in production environments by default.
-#group :assets do
-  gem 'sass'
-  gem 'sass-rails'
-  gem 'compass-rails'
-  gem 'sassy-buttons'
-  gem 'coffee-rails'
-  gem 'modernizr-rails'
+gem 'sass'
+gem 'sass-rails'
+gem 'compass-rails'
+gem 'sassy-buttons'
+gem 'coffee-rails'
+gem 'modernizr-rails'
 
-
-  gem 'uglifier', '>= 1.0.3'
-#end
+gem 'uglifier', '>= 1.0.3'
 
 group :development, :test do
-  gem "rspec-rails"
-  gem "factory_bot_rails"
-  gem "spork-rails"
+  gem 'rspec-rails'
+  gem 'factory_bot_rails'
+  gem 'spork-rails'
   gem 'coffee-script-source', '1.8.0'
 
   # Use thin web-server in dev
@@ -38,17 +33,16 @@ group :development, :test do
 end
 
 group :development do
-  gem "quiet_assets"
-  gem "better_errors", '~> 1.1.0'
-  gem "binding_of_caller"
-  #gem "erb2haml"
+  gem 'quiet_assets'
+  gem 'better_errors', '~> 1.1.0'
+  gem 'binding_of_caller'
 end
 
 group :test do
-  gem "database_cleaner"
-  gem "email_spec"
-  gem "launchy"
-  gem "capybara"
+  gem 'database_cleaner'
+  gem 'email_spec'
+  gem 'launchy'
+  gem 'capybara'
 
   gem 'selenium-webdriver'
   gem 'capybara-selenium'
@@ -88,7 +82,7 @@ gem 'figaro'
 
 # User authentication by devise
 # Peg version to work with ruby 2.0
-gem 'devise', "3.5.10"
+gem 'devise', '3.5.10'
 
 # Squeel - simpler SQL queries through AREL
 gem 'squeel'
@@ -98,8 +92,8 @@ gem 'squeel'
 gem 'ransack', '1.6.3'
 
 # Delayed job and manager for its workers
-gem "delayed_job_active_record"
-gem "workless", :group => :production
+gem 'delayed_job_active_record'
+gem 'workless', group: :production
 
 # To display phone numbers correctly
 gem 'uk_phone_numbers'
