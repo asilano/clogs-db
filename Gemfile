@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.3.7'
+ruby '~> 2.4.4'
 gem 'rails', '~> 4.2.0'
 
 gem 'rack-cache'
@@ -56,9 +56,9 @@ group :test do
   # gem 'rake'
 
   # Peg to a version that supports Ruby 1.9.3
-  gem 'nokogiri', '~> 1.6.0'
-  gem 'tins', '1.3.3'
-  gem 'term-ansicolor', '~> 1.3.0'
+  gem 'nokogiri'
+  gem 'tins'
+  gem 'term-ansicolor'
 end
 
 group :production do

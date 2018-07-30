@@ -175,14 +175,14 @@ GEM
       mini_mime (>= 0.1.1)
     mime-types (2.99.3)
     mini_mime (1.0.0)
-    mini_portile2 (2.1.0)
+    mini_portile2 (2.3.0)
     minitest (5.11.3)
     modernizr-rails (2.7.1)
     moneta (0.8.1)
     multi_json (1.13.1)
     netrc (0.11.0)
-    nokogiri (1.6.8.1)
-      mini_portile2 (~> 2.1.0)
+    nokogiri (1.8.4)
+      mini_portile2 (~> 2.3.0)
     orm_adapter (0.5.0)
     pg (0.18.4)
     platform-api (2.1.0)
@@ -303,7 +303,7 @@ GEM
       activerecord (>= 3.0)
       activesupport (>= 3.0)
       polyamorous (~> 1.1.0)
-    term-ansicolor (1.3.2)
+    term-ansicolor (1.6.0)
       tins (~> 1.0)
     thin (1.7.2)
       daemons (~> 1.0, >= 1.0.9)
@@ -313,7 +313,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.8)
     timecop (0.9.1)
-    tins (1.3.3)
+    tins (1.16.3)
     transactional_capybara (0.2.0)
       capybara
     tzinfo (1.2.5)
@@ -365,7 +365,7 @@ DEPENDENCIES
   jquery-rails
   launchy
   modernizr-rails
-  nokogiri (~> 1.6.0)
+  nokogiri
   pg (~> 0.18.0)
   quiet_assets
   rack-cache
@@ -380,10 +380,10 @@ DEPENDENCIES
   shoulda-matchers
   spork-rails
   squeel
-  term-ansicolor (~> 1.3.0)
+  term-ansicolor
   thin
   timecop
-  tins (= 1.3.3)
+  tins
   transactional_capybara
   uglifier (>= 1.0.3)
   uk_phone_numbers
@@ -391,7 +391,7 @@ DEPENDENCIES
   workless
 
 RUBY VERSION
-   ruby 2.3.7p456
+   ruby 2.4.4p296
 
 BUNDLED WITH
    1.16.3
