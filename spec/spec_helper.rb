@@ -46,7 +46,7 @@ RSpec.configure do |config|
 
   config.include Capybara::DSL
   config.include(MailerMacros)
-  config.include Devise::TestHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ActionView::Helpers::TextHelper
 end
 

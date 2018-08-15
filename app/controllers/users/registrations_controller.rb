@@ -1,9 +1,9 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  before_filter -> { authenticate_user! force: true }, only: [:index, :approve]
+  before_action -> { authenticate_user! force: true }, only: [:index, :approve]
 
   def index
     if params[:approval] == '1'
-      @users = User.where { approved == false }
+      @users = User.where.has { approved == false }
       @approval = true
     else
       @users = User.all

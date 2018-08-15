@@ -1,6 +1,6 @@
 class MembersController < ApplicationController
   # Can't do anything unless signed in
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   before_action :set_member, only: %i[show edit update toggle_paid destroy]
 

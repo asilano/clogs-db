@@ -1,6 +1,6 @@
 class MailShotsController < ApplicationController
   # Can't do anything unless signed in
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   def new
     if params[:mailing_list_id].to_i > 0

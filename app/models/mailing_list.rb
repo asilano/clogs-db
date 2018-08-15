@@ -1,4 +1,4 @@
-class MailingList < ActiveRecord::Base
+class MailingList < ApplicationRecord
   serialize :query, Hash
 
   validates :name, presence: true, uniqueness: true

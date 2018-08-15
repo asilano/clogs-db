@@ -1,40 +1,38 @@
 source 'https://rubygems.org'
 
 ruby '~> 2.4.4'
-gem 'rails', '~> 4.2.0'
+gem 'rails', '~> 5.0.0'
+gem 'railties', '~> 5.0.0'
 
 gem 'rack-cache'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-# Peg pg to version supported by Ruby 1.9.3
-gem 'pg', '~> 0.18.0'
+gem 'pg'
 
 gem 'sass'
 gem 'sass-rails'
-gem 'compass-rails'
+gem 'compass-rails', '~> 3.1.0'
 gem 'sassy-buttons'
 gem 'coffee-rails'
 gem 'modernizr-rails'
 
-gem 'uglifier', '>= 1.0.3'
+gem 'uglifier'
 
 group :development, :test do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
-  gem 'spork-rails'
-  gem 'coffee-script-source', '1.8.0'
+  gem 'coffee-script-source'
 
-  # Use thin web-server in dev
-  gem 'thin'
+  # Use puma web-server in dev
+  gem 'puma'
 
   gem 'byebug'
 end
 
 group :development do
-  gem 'quiet_assets'
-  gem 'better_errors', '~> 1.1.0'
+  gem 'better_errors'
   gem 'binding_of_caller'
 end
 
@@ -51,11 +49,11 @@ group :test do
   gem 'coveralls', require: false
   gem 'timecop'
   gem 'shoulda-matchers'
+  gem 'rails-controller-testing'
 
   # Let Travis see Rake
   # gem 'rake'
 
-  # Peg to a version that supports Ruby 1.9.3
   gem 'nokogiri'
   gem 'tins'
   gem 'term-ansicolor'
@@ -69,8 +67,7 @@ group :production do
 end
 
 gem 'jquery-rails'
-# Peg to version that supports Ruby 1.9.3
-gem 'haml', '~> 4.0.0'
+gem 'haml'
 gem 'haml-rails'
 
 gem 'attribute_normalizer'
@@ -81,15 +78,13 @@ gem 'andand'
 gem 'figaro'
 
 # User authentication by devise
-# Peg version to work with ruby 2.0
-gem 'devise', '3.5.10'
+gem 'devise'
 
-# Squeel - simpler SQL queries through AREL
-gem 'squeel'
+# BabySqueel - simpler SQL queries through AREL
+gem 'baby_squeel'
 
 # Ransack - complex search forms
-# Peg to a version supported by Ruby 1.9.3
-gem 'ransack', '1.6.3'
+gem 'ransack', github: 'activerecord-hackery/ransack'
 
 # Delayed job and manager for its workers
 gem 'delayed_job_active_record'
@@ -112,6 +107,3 @@ gem 'friendly_id'
 
 # Deploy with Capistrano
 # gem 'capistrano'
-
-# To use debugger
-# gem 'debugger'

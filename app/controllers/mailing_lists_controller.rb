@@ -1,6 +1,6 @@
 class MailingListsController < ApplicationController
   # Can't do anything unless signed in
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   # GET /mailing_lists
   # GET /mailing_lists.json
@@ -92,8 +92,8 @@ class MailingListsController < ApplicationController
   private
 
   def mailing_list_params
-    params.require(:mailing_list).permit(:name, member_ids: []).tap do |whitelisted|
-      whitelisted[:query] = params[:mailing_list][:query] if params[:mailing_list].key? :query
+    params.require(:mailing_list).permit(:name, member_ids: [], query: {}).tap do |whitelisted|
+      whitelisted[:query] = params[:mailing_list][:query].permit! if params[:mailing_list].key? :query
     end
   end
 end

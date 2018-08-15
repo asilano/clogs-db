@@ -7,7 +7,7 @@ describe MailShotsController do
   describe "while logged out" do
     describe "GET new" do
       it "redirects to login" do
-        get :new, {mailing_list_id: 1}
+        get :new, params: { mailing_list_id: 1 }
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -23,7 +23,7 @@ describe MailShotsController do
       describe "with invalid params" do
         it "redirects to login" do
           # Trigger the behavior that occurs when invalid params are submitted
-          post :create, :mailing_list_id => "invalid value"
+          post :create, params: { mailing_list_id: "invalid value" }
           expect(response).to redirect_to(new_user_session_path)
         end
       end
@@ -41,12 +41,12 @@ describe MailShotsController do
 
     describe "GET new" do
       it "prefills the mailing list if given" do
-        get :new, {:mailing_list_id => mailing_list.id}
+        get :new, params: { mailing_list_id: mailing_list.id }
         expect(assigns(:list)).to eq mailing_list
       end
 
       it "leaves the mailing list as nil if not given" do
-        get :new, {:mailing_list_id => ''}
+        get :new, params: { mailing_list_id: '' }
         expect(assigns(:list)).to be_nil
       end
     end
@@ -54,29 +54,29 @@ describe MailShotsController do
     describe "POST create" do
       describe "with valid params" do
         it "redirects to the new mail-shot page" do
-          post :create, valid_attributes
+          post :create, params: valid_attributes
           expect(response).to render_template(:new)
         end
 
         it "has a successful flash" do
-          post :create, valid_attributes
+          post :create, params: valid_attributes
           expect(flash[:notice]).to_not be_nil
         end
 
         it "delays creating the emails" do
           expect(@mock_delay).to receive(:send_emails).with no_args
-          post :create, valid_attributes
+          post :create, params: valid_attributes
         end
       end
 
       describe "with invalid params" do
         it "redirects to the new mail-shot page" do
-          post :create, {:mailing_list_id => "invalid value"}
+          post :create, params: { mailing_list_id: "invalid value" }
           expect(response).to render_template(:new)
         end
 
         it "has an error flash" do
-          post :create, {:mailing_list_id => "invalid value"}
+          post :create, params: { mailing_list_id: "invalid value" }
           expect(flash[:error]).to_not be_nil
         end
       end

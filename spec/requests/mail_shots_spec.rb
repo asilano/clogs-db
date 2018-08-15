@@ -12,7 +12,7 @@ describe 'MailShots' do
 
     describe "POST create" do
       it "redirects to login" do
-        post create_mail_shot_path, { mailing_list_id: 1, body: "Hello" }
+        post create_mail_shot_path, params: { mailing_list_id: 1, body: "Hello" }
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -236,7 +236,7 @@ describe 'MailShots' do
         end
 
         # Test list with fixed and dynamic members
-        @simple_dynamic_list.members = Member.where { surname.like_any ['Rankin', 'Roberts', '%Wise'] }
+        @simple_dynamic_list.members = Member.where.has { surname.like_any ['Rankin', 'Roberts', '%Wise'] }
         @simple_dynamic_list.save
 
         # Varying members and fixed members are emailed, only once each

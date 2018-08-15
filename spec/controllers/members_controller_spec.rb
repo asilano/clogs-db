@@ -30,7 +30,7 @@ describe MembersController do
     describe "GET index" do
       it "redirects to login" do
         member = Member.create! valid_attributes
-        get :index, {}
+        get :index
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -38,14 +38,14 @@ describe MembersController do
     describe "GET show" do
       it "redirects to login" do
         member = Member.create! valid_attributes
-        get :show, {:id => member.to_param}
+        get :show, params: { id: member.to_param }
         expect(response).to redirect_to(new_user_session_path)
       end
     end
 
     describe "GET new" do
       it "redirects to login" do
-        get :new, {}
+        get :new
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -53,7 +53,7 @@ describe MembersController do
     describe "GET edit" do
       it "redirects to login" do
         member = Member.create! valid_attributes
-        get :edit, {:id => member.to_param}
+        get :edit, params: { id: member.to_param }
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -62,12 +62,12 @@ describe MembersController do
       describe "with valid params" do
         it "does not create a new Member" do
           expect {
-            post :create, {:member => valid_attributes}
+            post :create, params: { member: valid_attributes }
           }.to_not change(Member, :count)
         end
 
         it "redirects to login" do
-          post :create, {:member => valid_attributes}
+          post :create, params: { member: valid_attributes }
           expect(response).to redirect_to(new_user_session_path)
         end
       end
@@ -76,7 +76,7 @@ describe MembersController do
         it "redirects to login" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Member).to receive(:save).and_return(false)
-          post :create, {:member => { "forename" => "invalid value" }}
+          post :create, params: { member: { "forename" => "invalid value" } }
           expect(response).to redirect_to(new_user_session_path)
         end
       end
@@ -87,12 +87,12 @@ describe MembersController do
         it "does not update the requested member" do
           member = Member.create! valid_attributes
           expect_any_instance_of(Member).to_not receive(:update_attributes).with({ "forename" => "MyString" })
-          put :update, {:id => member.to_param, :member => { "forename" => "MyString" }}
+          put :update, params: { id: member.to_param, member: { "forename" => "MyString" } }
         end
 
         it "redirects to login" do
           member = Member.create! valid_attributes
-          put :update, {:id => member.to_param, :member => valid_attributes}
+          put :update, params: { id: member.to_param, member: valid_attributes }
           expect(response).to redirect_to(new_user_session_path)
         end
       end
@@ -102,7 +102,7 @@ describe MembersController do
           member = Member.create! valid_attributes
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Member).to receive(:save).and_return(false)
-          put :update, {:id => member.to_param, :member => { "forename" => "invalid value" }}
+          put :update, params: { id: member.to_param, member: { "forename" => "invalid value" } }
           expect(response).to redirect_to(new_user_session_path)
         end
       end
@@ -112,13 +112,13 @@ describe MembersController do
       it "does not destroy the requested member" do
         member = Member.create! valid_attributes
         expect {
-          delete :destroy, {:id => member.to_param}
+          delete :destroy, params: { id: member.to_param }
         }.to_not change(Member, :count)
       end
 
       it "redirects to login" do
         member = Member.create! valid_attributes
-        delete :destroy, {:id => member.to_param}
+        delete :destroy, params: { id: member.to_param }
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -134,7 +134,7 @@ describe MembersController do
     describe "GET index" do
       it "assigns all members as @members" do
         member = Member.create! valid_attributes
-        get :index, {}
+        get :index
         expect(assigns(:members)).to eq([member])
       end
     end
@@ -142,14 +142,14 @@ describe MembersController do
     describe "GET show" do
       it "assigns the requested member as @member" do
         member = Member.create! valid_attributes
-        get :show, {:id => member.to_param}
+        get :show, params: { id: member.to_param }
         expect(assigns(:member)).to eq(member)
       end
     end
 
     describe "GET new" do
       it "assigns a new member as @member" do
-        get :new, {}
+        get :new
         expect(assigns(:member)).to be_a_new(Member)
       end
     end
@@ -157,7 +157,7 @@ describe MembersController do
     describe "GET edit" do
       it "assigns the requested member as @member" do
         member = Member.create! valid_attributes
-        get :edit, {:id => member.to_param}
+        get :edit, params: { id: member.to_param }
         expect(assigns(:member)).to eq(member)
       end
     end
@@ -166,18 +166,18 @@ describe MembersController do
       describe "with valid params" do
         it "creates a new Member" do
           expect {
-            post :create, {:member => valid_attributes}
+            post :create, params: { member: valid_attributes }
           }.to change(Member, :count).by(1)
         end
 
         it "assigns a newly created member as @member" do
-          post :create, {:member => valid_attributes}
+          post :create, params: { member: valid_attributes }
           expect(assigns(:member)).to be_a(Member)
           expect(assigns(:member)).to be_persisted
         end
 
         it "redirects to the created member" do
-          post :create, {:member => valid_attributes}
+          post :create, params: { member: valid_attributes }
           expect(response).to redirect_to(Member.last)
         end
       end
@@ -186,14 +186,14 @@ describe MembersController do
         it "assigns a newly created but unsaved member as @member" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Member).to receive(:save).and_return(false)
-          post :create, {:member => { "forename" => "invalid value" }}
+          post :create, params: { member: { "forename" => "invalid value" } }
           expect(assigns(:member)).to be_a_new(Member)
         end
 
         it "re-renders the 'new' template" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Member).to receive(:save).and_return(false)
-          post :create, {:member => { "forename" => "invalid value" }}
+          post :create, params: { member: { "forename" => "invalid value" } }
           expect(response).to render_template("new")
         end
       end
@@ -207,19 +207,19 @@ describe MembersController do
           # specifies that the Member created on the previous line
           # receives the :update_attributes message with whatever params are
           # submitted in the request.
-          expect_any_instance_of(Member).to receive(:update_attributes).with({ "forename" => "MyString" })
-          put :update, {:id => member.to_param, :member => { "forename" => "MyString" }}
+          expect_any_instance_of(Member).to receive(:update_attributes).with(ActionController::Parameters.new({ "forename" => "MyString" }).permit(:forename))
+          put :update, params: { id: member.to_param, member: { "forename" => "MyString" } }
         end
 
         it "assigns the requested member as @member" do
           member = Member.create! valid_attributes
-          put :update, {:id => member.to_param, :member => valid_attributes}
+          put :update, params: { id: member.to_param, member: valid_attributes }
           expect(assigns(:member)).to eq(member)
         end
 
         it "redirects to the member" do
           member = Member.create! valid_attributes
-          put :update, {:id => member.to_param, :member => valid_attributes}
+          put :update, params: { id: member.to_param, member: valid_attributes }
           expect(response).to redirect_to(member)
         end
       end
@@ -229,7 +229,7 @@ describe MembersController do
           member = Member.create! valid_attributes
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Member).to receive(:save).and_return(false)
-          put :update, {:id => member.to_param, :member => { "forename" => "invalid value" }}
+          put :update, params: { id: member.to_param, member: { "forename" => "invalid value" } }
           expect(assigns(:member)).to eq(member)
         end
 
@@ -237,7 +237,7 @@ describe MembersController do
           member = Member.create! valid_attributes
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Member).to receive(:save).and_return(false)
-          put :update, {:id => member.to_param, :member => { "forename" => "invalid value" }}
+          put :update, params: { id: member.to_param, member: { "forename" => "invalid value" } }
           expect(response).to render_template("edit")
         end
       end
@@ -247,13 +247,13 @@ describe MembersController do
       it "destroys the requested member" do
         member = Member.create! valid_attributes
         expect {
-          delete :destroy, {:id => member.to_param}
+          delete :destroy, params: { id: member.to_param }
         }.to change(Member, :count).by(-1)
       end
 
       it "redirects to the members list" do
         member = Member.create! valid_attributes
-        delete :destroy, {:id => member.to_param}
+        delete :destroy, params: { id: member.to_param }
         expect(response).to redirect_to(members_url)
       end
     end

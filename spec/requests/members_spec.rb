@@ -12,7 +12,7 @@ describe "Members" do
 
     describe "POST /members" do
       it "redirects to login path" do
-        post members_path, {forename: 'John'}
+        post members_path, params: { forename: 'John' }
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -47,7 +47,7 @@ describe "Members" do
     describe "PUT /members/:id" do
       it "redirects to login path" do
         member = FactoryBot.create(:member)
-        put member_path(member), {forename: 'Jane'}
+        put member_path(member), params: { forename: 'Jane' }
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -304,7 +304,7 @@ describe "Members" do
           page.first('a span.icon-remove').find(:xpath, '..').click
         }.to change(Member, :count).by(-1)
 
-        expect(Member.where{ forename == old_forename }.first).to be_nil
+        expect(Member.where.has { forename == old_forename }.first).to be_nil
         expect(current_path).to eq members_path
       end
     end

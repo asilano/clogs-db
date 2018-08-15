@@ -12,7 +12,7 @@ describe "MailingLists" do
 
     describe "POST /mailing_lists" do
       it "redirects to login path" do
-        post mailing_lists_path, {name: 'John\'s list'}
+        post mailing_lists_path, params: {name: 'John\'s list'}
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -47,7 +47,7 @@ describe "MailingLists" do
     describe "PUT /mailing_lists/:id" do
       it "redirects to login path" do
         mailing_list = FactoryBot.create(:mailing_list)
-        put mailing_list_path(mailing_list), {name: 'Jane\'s list'}
+        put mailing_list_path(mailing_list), params: {name: 'Jane\'s list'}
         expect(response.status).to be(302)
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -206,7 +206,7 @@ describe "MailingLists" do
         end
 
         # Test list with fixed and dynamic members
-        @simple_dynamic_list.members = Member.where { surname.like_any ['Rankin', 'Roberts', '%Wise'] }
+        @simple_dynamic_list.members = Member.where.has { surname.like_any ['Rankin', 'Roberts', '%Wise'] }
         @simple_dynamic_list.save
 
         visit mailing_list_path @simple_dynamic_list
@@ -236,15 +236,15 @@ describe "MailingLists" do
         # Test list referring to other lists
         @mailing_list.members = Member.all
         @mailing_list.save
-        @sub_list.members = [2,3,5,7].map { |ix| Member.where { (forename == members[ix][:forename]) & (surname == members[ix][:surname]) }.first }
+        @sub_list.members = [2, 3, 5, 7].map { |ix| Member.where.has { (forename == members[ix][:forename]) & (surname == members[ix][:surname]) }.first }
         @sub_list.save
         visit mailing_list_path @list_difference_list
-        matching = members.values_at(0,1,4,6).map { |m| "#{m[:forename]} #{m[:surname]}" }
+        matching = members.values_at(0, 1, 4, 6).map { |m| "#{m[:forename]} #{m[:surname]}" }
         matching.each do |name|
           expect(page.find 'tr', text: 'Varying members').to have_content name
         end
 
-        mismatching = members.values_at(2,3,5,7).map { |m| "#{m[:forename]} #{m[:surname]}" }
+        mismatching = members.values_at(2, 3, 5, 7).map { |m| "#{m[:forename]} #{m[:surname]}" }
         mismatching.each do |name|
           expect(page.find 'tr', text: 'Fixed members').to_not have_content name
         end
@@ -602,7 +602,7 @@ describe "MailingLists" do
         page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
         page.select "#{@member3.forename} #{@member3.surname}", from: 'Members'
         click_button 'Save'
-        expect(@simple_dynamic_list.members true).to match_array [@member2, @member3]
+        expect(@simple_dynamic_list.members.reload).to match_array [@member2, @member3]
         expect(page.find 'tr', text: 'Varying members').to have_css('td', text: "<postcode> EQUALS 'AA0 0AA'")
       end
 
@@ -619,7 +619,7 @@ describe "MailingLists" do
         page.select "#{@member2.forename} #{@member2.surname}", from: 'Members'
         page.select "#{@member3.forename} #{@member3.surname}", from: 'Members'
         click_button 'Save'
-        expect(@complex_dynamic_list.members(true)).to match_array [@member2, @member3]
+        expect(@complex_dynamic_list.members.reload).to match_array [@member2, @member3]
         expect(page.find 'tr', text: 'Varying members').to have_css('td', text: 'No query')
       end
 
@@ -654,7 +654,7 @@ describe "MailingLists" do
           page.first('a span.icon-remove').find(:xpath, '..').click
         }.to change(MailingList, :count).by(-1)
 
-        expect(MailingList.where { name == old_name }.first).to be_nil
+        expect(MailingList.where.has { name == old_name }.first).to be_nil
         expect(current_path).to eq mailing_lists_path
       end
 

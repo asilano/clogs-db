@@ -1,4 +1,4 @@
-class Member < ActiveRecord::Base
+class Member < ApplicationRecord
   extend FriendlyId
   friendly_id :fullname, use: :slugged
 
