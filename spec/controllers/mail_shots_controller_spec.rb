@@ -15,7 +15,7 @@ describe MailShotsController do
     describe "POST create" do
       describe "with valid params" do
         it "redirects to login" do
-          post :create, valid_attributes
+          post :create, params: valid_attributes
           expect(response).to redirect_to(new_user_session_path)
         end
       end

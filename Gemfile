@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 ruby '~> 2.4.4'
-gem 'rails', '~> 5.0.0'
-gem 'railties', '~> 5.0.0'
+gem 'rails', '~> 5.1.0'
+gem 'railties'
 
 gem 'rack-cache'
 
@@ -27,6 +27,7 @@ group :development, :test do
 
   # Use puma web-server in dev
   gem 'puma'
+  gem 'listen'
 
   gem 'byebug'
 end
