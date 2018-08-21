@@ -11,4 +11,4 @@ before_script:
   - cp config/database.travis.yml config/database.yml
   - psql -c 'create database clogs_db_test' -U postgres
 script:
-  - RAILS_ENV=test bundle exec rake db:migrate spec
+  - RAILS_ENV=test bundle exec rake db:schema:load spec
