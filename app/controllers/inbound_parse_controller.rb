@@ -11,30 +11,12 @@ class InboundParseController < ApplicationController
     addr = Base64.decode64(b64_addr)
 
     # And do so.
-    mail = ActionMailer::Base.mail from: ENV['SOCIETY_EMAIL'], to: addr, subject: inbound_mail.subject
-    out_body = <<EOM
-Hi there!
+    MailShotsMailer.bounce_on(to: addr,
+                              subject: inbound_mail.subject,
+                              body: body,
+                              from: inbound_mail.from,
+                              attaches: inbound_mail.attachments).deliver_now
 
-Someone replied to a message you sent through the CLOGS Membership database. That reply is below, and any attachments have been forwarded on.
-
-Please DO NOT reply to this email! This email has come from the database too, and it'll just get very confusing. Instead, create a new email to the actual sender if you need to contact them.
-
-Message from: #{inbound_mail.from}
-
-Message:
-
-#{body}
-
-EOM
-
-    mail.content_type = 'multipart/mixed'
-    mail.part content_type: 'text/plain', body: out_body
-    inbound_mail.attachments.each do |att|
-      if att
-        mail.attachments[att.filename] = att.decoded
-      end
-    end
-    mail.deliver
   rescue => e
     Rails.logger.info('Inbound parse failed.')
     Rails.logger.info("#{e.class}: #{e.message}")

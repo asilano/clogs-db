@@ -19,4 +19,18 @@ class MailShotsMailer < ActionMailer::Base
 
     mail(subject: subject, to: to)
   end
+
+  def bounce_on(to: nil,
+                subject: nil,
+                body: nil,
+                from: nil,
+                attaches: [])
+    @body = body
+    @from = from
+    attaches.each do |attach|
+      attachments[attach.filename] = attach.decoded
+    end
+
+    mail(subject: subject, to: to)
+  end
 end
