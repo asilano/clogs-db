@@ -23,6 +23,6 @@ class InboundParseController < ApplicationController
     Rails.logger.info(e.backtrace[0..2])
     AdminMailer.bounce_on_failed(params).deliver
   ensure
-    render text: "Received: #{params}"
+    head :no_content
   end
 end

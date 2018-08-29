@@ -116,7 +116,7 @@ describe 'MailShots' do
         expect(Delayed::Worker.new.work_off).to eq [1, 0]
         expect(all_emails.count).to eq @sub_list.members.count
 
-        @sub_list.members.zip(all_emails) do |row|
+        @sub_list.members.sort_by(&:email).zip(all_emails.sort_by { |e| e.to[0] }) do |row|
           member = row[0]
           email = row[1]
           expect(email.to).to eq [member.email]
