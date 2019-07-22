@@ -4,6 +4,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'capybara/rspec'
 require 'transactional_capybara/rspec'
+require 'webdrivers'
 require 'selenium/webdriver'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
