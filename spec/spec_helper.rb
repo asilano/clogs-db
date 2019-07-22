@@ -63,7 +63,7 @@ Capybara.register_driver :headless_chrome do |app|
   # Capybara::Selenium::Driver.new app,
   #   browser: :chrome,
   #   desired_capabilities: capabilities
-  options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', 'disable-gpu', 'no-sandbox'])
+  options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', 'disable-gpu', 'no-sandbox'], w3c: true)
 
   Capybara::Selenium::Driver.new(
       app,
