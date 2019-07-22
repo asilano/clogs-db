@@ -3,9 +3,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'capybara/rspec'
-require 'transactional_capybara/rspec'
 require 'webdrivers'
-require 'selenium/webdriver'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -51,28 +49,33 @@ RSpec.configure do |config|
   config.include ActionView::Helpers::TextHelper
 end
 
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
+# Capybara.register_driver :chrome do |app|
+#   Capybara::Selenium::Driver.new(app, browser: :chrome)
+# end
+
+# Capybara.register_driver :headless_chrome do |app|
+#   # capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+#   #   chromeOptions: { args: %w(headless disable-gpu no-sandbox disable-dev-shm-usage) }
+#   # )
+
+#   # Capybara::Selenium::Driver.new app,
+#   #   browser: :chrome,
+#   #   desired_capabilities: capabilities
+#   options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', 'disable-gpu', 'no-sandbox'], w3c: true)
+
+#   Capybara::Selenium::Driver.new(
+#       app,
+#       browser: :chrome,
+#       options: options
+#   )
+# end
+Capybara.register_driver :firefox_headless do |app|
+  options = ::Selenium::WebDriver::Firefox::Options.new
+  options.args << '--headless'
+  Capybara::Selenium::Driver.new(app, browser: :firefox, options: options, desired_capabilities: caps)
 end
 
-Capybara.register_driver :headless_chrome do |app|
-  # capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-  #   chromeOptions: { args: %w(headless disable-gpu no-sandbox disable-dev-shm-usage) }
-  # )
-
-  # Capybara::Selenium::Driver.new app,
-  #   browser: :chrome,
-  #   desired_capabilities: capabilities
-  options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', 'disable-gpu', 'no-sandbox'], w3c: true)
-
-  Capybara::Selenium::Driver.new(
-      app,
-      browser: :chrome,
-      options: options
-  )
-end
-
-Capybara.javascript_driver = :headless_chrome
+Capybara.javascript_driver = :firefox_headless
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|

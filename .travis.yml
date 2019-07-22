@@ -1,6 +1,4 @@
 language: ruby
-addons:
-  chrome: stable
 services:
   - postgresql
 sudo: false

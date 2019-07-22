@@ -44,9 +44,8 @@ group :test do
   gem 'capybara'
 
   gem 'selenium-webdriver'
-  gem 'capybara-selenium'
+  gem 'capybara'
   gem 'webdrivers'
-  gem 'transactional_capybara'
   gem 'coveralls', require: false
   gem 'timecop'
   gem 'shoulda-matchers'
