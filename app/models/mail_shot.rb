@@ -22,7 +22,7 @@ class MailShot
     list = MailingList.find(@mailing_list_id)
 
     members = list.members
-    members += Member.search(list.query).result if list.query.present?
+    members += Member.ransack(list.query).result if list.query.present?
     members.uniq.each do |recpt|
       next unless recpt.email =~ EMAIL_PATTERN
 

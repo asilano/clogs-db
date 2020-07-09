@@ -21,7 +21,7 @@
     %td
       = display_query @list.query
       - if @list.query.present?
-        - dynamic_members = Member.search(@list.query).result
+        - dynamic_members = Member.ransack(@list.query).result
         .member-list
           = check_box_hack "Currently " + pluralize(dynamic_members.count, 'member') + " (of #{Member.count} total)", "dyn_members_list" do
             - if dynamic_members.present?

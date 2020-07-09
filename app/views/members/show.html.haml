@@ -65,7 +65,7 @@
         %ul
         - @member.mailing_lists.each do |list|
           %li= link_to(list.name, mailing_list_path(list))
-      - dynamic_matches = MailingList.all.select { |list| list.query.present? && Member.search(list.query).result.include?(@member) }
+      - dynamic_matches = MailingList.all.select { |list| list.query.present? && Member.ransack(list.query).result.include?(@member) }
       - unless dynamic_matches.empty?
         Currently matches the query in the following lists:
         %ul

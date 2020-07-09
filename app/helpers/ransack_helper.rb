@@ -3,7 +3,7 @@ module RansackHelper
     return 'No query' if query.empty?
 
     # Generate the search object, then render it
-    s = context.search(query)
+    s = context.ransack(query)
 
     groups = s.groupings.map { |group| render_ransack_group(group, context) }
     groups += s.conditions.map { |cond| render_ransack_condition(cond, context) }

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '~> 2.4.4'
+ruby '~> 2.6.5'
 gem 'rails', '~> 5.1.0'
 gem 'railties'
 
@@ -41,7 +41,6 @@ group :test do
   gem 'database_cleaner'
   gem 'email_spec'
   gem 'launchy'
-  gem 'capybara'
 
   gem 'selenium-webdriver'
   gem 'capybara'
