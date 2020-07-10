@@ -1,19 +1,19 @@
 FactoryBot.define do
   factory :mailing_list do
-    name "Publicity"
+    name { "Publicity" }
   end
 
   factory :small_mailing_list, :class => MailingList do
-    name "Only some members"
+    name { "Only some members" }
   end
 
   factory :simple_dynamic_list, :class => MailingList do
-    name 'Simple dynamic list'
+    name { 'Simple dynamic list' }
     query {{'forename_or_email_cont' => 'ian'}}
   end
 
   factory :complex_dynamic_list, :class => MailingList do
-    name 'Complex dynamic list'
+    name { 'Complex dynamic list' }
     query {{
       'g' => {
         '0' => {
@@ -60,7 +60,7 @@ FactoryBot.define do
   end
 
   factory :list_difference, class: MailingList do
-    name 'Difference between lists'
+    name { 'Difference between lists' }
     query {{
       'g' => {
         '0' => {

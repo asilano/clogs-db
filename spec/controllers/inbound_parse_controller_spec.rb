@@ -21,7 +21,7 @@ EOF
 
       expect { post :parse, params: { email: email } }.
         to change { ActionMailer::Base.deliveries.size }.by(1)
-      expect(response).to be_success
+      expect(response).to be_successful
       email = ActionMailer::Base.deliveries.last
       expect(email.body).to include('This is testing bounce-on.')
       expect(email.to).to eq ['bob@example.com']
@@ -45,7 +45,7 @@ EOF
 
       expect { post :parse, params: { email: email } }.
         to change { ActionMailer::Base.deliveries.size }.by(1)
-      expect(response).to be_success
+      expect(response).to be_successful
       email = ActionMailer::Base.deliveries.last
       expect(email.subject).to eq 'Bounce-on failed'
       expect(email.body).to include('threw an exception')

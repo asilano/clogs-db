@@ -3,7 +3,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def index
     if params[:approval] == '1'
-      @users = User.where.has { approved == false }
+      @users = User.where(approved: false)
       @approval = true
     else
       @users = User.all
