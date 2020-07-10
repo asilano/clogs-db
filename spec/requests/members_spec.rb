@@ -304,7 +304,7 @@ describe "Members" do
           page.first('a span.icon-remove').find(:xpath, '..').click
         }.to change(Member, :count).by(-1)
 
-        expect(Member.where.has { forename == old_forename }.first).to be_nil
+        expect(Member.where(forename: old_forename).first).to be_nil
         expect(current_path).to eq members_path
       end
     end

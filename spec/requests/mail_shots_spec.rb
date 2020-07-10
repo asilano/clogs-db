@@ -236,7 +236,7 @@ describe 'MailShots' do
         end
 
         # Test list with fixed and dynamic members
-        @simple_dynamic_list.members = Member.where.has { surname.like_any ['Rankin', 'Roberts', '%Wise'] }
+        @simple_dynamic_list.members = Member.where(surname: ['Rankin', 'Roberts']).or(Member.where('surname LIKE ?', '%Wise'))
         @simple_dynamic_list.save
 
         # Varying members and fixed members are emailed, only once each

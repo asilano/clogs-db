@@ -35,7 +35,7 @@
             %div{:class => "query-form #{@query_present ? '' : 'hidden'}"}
               %button.toggle-query.danger Remove query
               %div Mailing list should contain all contacts where:
-              - @search ||= Member.search
+              - @search ||= Member.ransack
               - @search.build_grouping unless @search.g.any?
               = f.search_fields_for 'query', @search do |s|
                 - setup_search_form s

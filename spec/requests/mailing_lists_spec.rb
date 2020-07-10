@@ -206,7 +206,7 @@ describe "MailingLists" do
         end
 
         # Test list with fixed and dynamic members
-        @simple_dynamic_list.members = Member.where.has { surname.like_any ['Rankin', 'Roberts', '%Wise'] }
+        @simple_dynamic_list.members = Member.where(surname: ['Rankin', 'Roberts']).or(Member.where('surname LIKE ?', '%Wise'))
         @simple_dynamic_list.save
 
         visit mailing_list_path @simple_dynamic_list
@@ -236,7 +236,7 @@ describe "MailingLists" do
         # Test list referring to other lists
         @mailing_list.members = Member.all
         @mailing_list.save
-        @sub_list.members = [2, 3, 5, 7].map { |ix| Member.where.has { (forename == members[ix][:forename]) & (surname == members[ix][:surname]) }.first }
+        @sub_list.members = [2, 3, 5, 7].map { |ix| Member.where(forename: members[ix][:forename]).where(surname: members[ix][:surname]).first }
         @sub_list.save
         visit mailing_list_path @list_difference_list
         matching = members.values_at(0, 1, 4, 6).map { |m| "#{m[:forename]} #{m[:surname]}" }
@@ -654,7 +654,7 @@ describe "MailingLists" do
           page.first('a span.icon-remove').find(:xpath, '..').click
         }.to change(MailingList, :count).by(-1)
 
-        expect(MailingList.where.has { name == old_name }.first).to be_nil
+        expect(MailingList.where(name: old_name).first).to be_nil
         expect(current_path).to eq mailing_lists_path
       end
 

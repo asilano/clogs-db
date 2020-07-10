@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-ruby '~> 2.4.4'
-gem 'rails', '~> 5.1.0'
+ruby '~> 2.6.5'
+gem 'rails', '~> 5.2.0'
 gem 'railties'
 
 gem 'rack-cache'
@@ -10,6 +10,8 @@ gem 'rack-cache'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
+
+gem 'bootsnap'
 
 gem 'sass'
 gem 'sass-rails'
@@ -41,7 +43,6 @@ group :test do
   gem 'database_cleaner'
   gem 'email_spec'
   gem 'launchy'
-  gem 'capybara'
 
   gem 'selenium-webdriver'
   gem 'capybara'
@@ -79,9 +80,6 @@ gem 'figaro'
 
 # User authentication by devise
 gem 'devise'
-
-# BabySqueel - simpler SQL queries through AREL
-gem 'baby_squeel'
 
 # Ransack - complex search forms
 gem 'ransack', github: 'activerecord-hackery/ransack'

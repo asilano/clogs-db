@@ -39,7 +39,7 @@ class MailingListsController < ApplicationController
   # GET /mailing_lists/1/edit
   def edit
     @list = MailingList.find(params[:id])
-    @search = Member.search(@list.query)
+    @search = Member.ransack(@list.query)
     @query_present = @list.query.present?
   end
 
